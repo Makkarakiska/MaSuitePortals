@@ -1,0 +1,3 @@
+portal:
+  set: "&aCreated portal with name %name% and target %target%"
+  delete: "&aDeleted portal with name %name%"
