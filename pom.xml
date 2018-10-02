@@ -8,6 +8,7 @@
     <artifactId>MaSuitePortals</artifactId>
     <version>1.0</version>
     <build>
+        <finalName>MaSuitePortals</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
