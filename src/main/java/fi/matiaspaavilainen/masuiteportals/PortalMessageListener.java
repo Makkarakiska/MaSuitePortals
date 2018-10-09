@@ -18,40 +18,41 @@ public class PortalMessageListener implements Listener {
 
     private Configuration config = new Configuration();
     private Formator formator = new Formator();
+
     @EventHandler
-    public void onMessageReceived(PluginMessageEvent e){
-        if(e.getTag().equals("BungeeCord")){
+    public void onMessageReceived(PluginMessageEvent e) {
+        if (e.getTag().equals("BungeeCord")) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String subchannel = in.readUTF();
-                if(subchannel.equals("MaSuitePortals")){
+                if (subchannel.equals("MaSuitePortals")) {
                     String childchannel = in.readUTF();
-                    if(childchannel.equals("SetPortal")){
+                    if (childchannel.equals("SetPortal")) {
                         Portal portal = new Portal();
                         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
-                        if(p == null){
+                        if (p == null) {
                             return;
                         }
                         portal.setName(in.readUTF());
                         portal.setServer(p.getServer().getInfo().getName());
                         portal.setType(in.readUTF());
                         String destination = in.readUTF();
-                        if(portal.getType().equals("server")){
+                        if (portal.getType().equals("server")) {
                             ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(destination);
-                            if(serverInfo.getName() == null){
+                            if (serverInfo.getName() == null) {
                                 // Server not valid
                                 formator.sendMessage(p, config.load("portals", "messages.yml").getString("server-not-found"));
                                 return;
                             }
                             portal.setDestination(destination);
-                        } else if(portal.getType().equals("warp")) {
+                        } else if (portal.getType().equals("warp")) {
                             portal.setDestination(destination);
                         }
                         portal.setFillType(in.readUTF());
                         String[] minLoc = in.readUTF().split(":");
-                        portal.setMinLoc(new Location(minLoc[0], Double.parseDouble(minLoc[1]), Double.parseDouble(minLoc[2]), Double.parseDouble(minLoc[3]), Float.parseFloat(minLoc[4]), Float.parseFloat(minLoc[5])));
+                        portal.setMinLoc(new Location(minLoc[0], Double.parseDouble(minLoc[1]), Double.parseDouble(minLoc[2]), Double.parseDouble(minLoc[3])));
                         String[] maxLoc = in.readUTF().split(":");
-                        portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3]), Float.parseFloat(maxLoc[4]), Float.parseFloat(maxLoc[5])));
+                        portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3])));
                         portal.save();
                     }
                 }
