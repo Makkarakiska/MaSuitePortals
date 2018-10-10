@@ -28,23 +28,30 @@ public class PortalMessageListener implements Listener {
                 if (subchannel.equals("MaSuitePortals")) {
                     String childchannel = in.readUTF();
                     if (childchannel.equals("SetPortal")) {
-                        Portal portal = new Portal();
+
+                        // Get the player
                         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
                         if (p == null) {
                             return;
                         }
+
+                        // Setup portal
+                        Portal portal = new Portal();
                         portal.setName(in.readUTF());
                         portal.setServer(p.getServer().getInfo().getName());
                         portal.setType(in.readUTF());
                         String destination = in.readUTF();
+
+                        // Get portal type
                         if (portal.getType().equals("server")) {
                             ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(destination);
-                            if (serverInfo.getName() == null) {
-                                // Server not valid
+                            if (serverInfo == null) {
                                 formator.sendMessage(p, config.load("portals", "messages.yml").getString("server-not-found"));
                                 return;
+                            }else{
+                                portal.setDestination(destination);
                             }
-                            portal.setDestination(destination);
+
                         } else if (portal.getType().equals("warp")) {
                             portal.setDestination(destination);
                         }
@@ -55,10 +62,19 @@ public class PortalMessageListener implements Listener {
                         portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3])));
                         portal.save();
                     }
+                    if(childchannel.equals("SendPlayer")){
+                        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
+                        if (p == null) {
+                            return;
+                        }
+                        Portal portal = new Portal();
+                        p.connect(ProxyServer.getInstance().getServerInfo("freebuild"));
+                    }
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+
         }
     }
 }
