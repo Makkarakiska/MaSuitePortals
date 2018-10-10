@@ -1,12 +1,14 @@
 package fi.matiaspaavilainen.masuiteportals;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import fi.matiaspaavilainen.masuitecore.config.Configuration;
 import fi.matiaspaavilainen.masuiteportals.database.Database;
-import fi.matiaspaavilainen.masuiteportals.commands.Delete;
-import fi.matiaspaavilainen.masuiteportals.commands.List;
-import fi.matiaspaavilainen.masuiteportals.commands.Set;
 import fi.matiaspaavilainen.masuitecore.Updator;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
+
+import java.util.Map;
 
 public class MaSuitePortals extends Plugin {
 
@@ -41,10 +43,36 @@ public class MaSuitePortals extends Plugin {
                         "maxZ DOUBLE NOT NULL); ");
 
         // Register PortalMessageListener
-        getProxy().getPluginManager().registerListener(this, new PortalMessageListener());
+        getProxy().getPluginManager().registerListener(this, new PortalMessageListener(this));
+
+        // Send portal lists to servers
+        sendPortalList();
 
         // Updator
         // TODO: Add ID after update
         // new Updator().checkVersion(this.getDescription(), "");
+    }
+
+    public void sendPortalList(){
+        Portal p = new Portal();
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        for (Map.Entry<String, ServerInfo> entry : getProxy().getServers().entrySet()) {
+            ServerInfo serverInfo = entry.getValue();
+            serverInfo.ping((result, error) -> {
+                if (error == null) {
+                    StringBuilder portals = new StringBuilder();
+                    p.all().forEach(portal -> {
+                        if(serverInfo.getName().equals(portal.getServer())){
+                            portals.append(portal.toString()).append("--");
+                        }
+                    });
+                    out.writeUTF("MaSuitePortals");
+                    out.writeUTF("PortalList");
+                    out.writeUTF(portals.toString());
+                    System.out.println(portals.toString());
+                    serverInfo.sendData("BungeeCord", out.toByteArray());
+                }
+            });
+        }
     }
 }

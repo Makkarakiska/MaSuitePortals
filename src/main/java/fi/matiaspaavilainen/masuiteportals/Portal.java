@@ -6,7 +6,10 @@ import fi.matiaspaavilainen.masuiteportals.database.Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Portal {
 
@@ -86,6 +89,55 @@ public class Portal {
         }
     }
 
+    public Set<Portal> all(){
+        Set<Portal> portals = new HashSet<>();
+        ResultSet rs = null;
+
+        try {
+            connection = db.hikari.getConnection();
+            statement = connection.prepareStatement("SELECT * FROM " + tablePrefix + "portals;");
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                Portal portal = new Portal();
+                portal.setName(rs.getString("name"));
+                portal.setServer(rs.getString("server"));
+                portal.setType(rs.getString("type"));
+                portal.setDestination(rs.getString("destination"));
+                portal.setFillType(rs.getString("filltype"));
+                portal.setMinLoc(new Location(rs.getString("world"), rs.getDouble("minX"), rs.getDouble("minY"), rs.getDouble("minZ")));
+                portal.setMaxLoc(new Location(rs.getString("world"), rs.getDouble("maxX"), rs.getDouble("maxY"), rs.getDouble("maxZ")));
+                portals.add(portal);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return portals;
+    }
+
     public String getName() {
         return name;
     }
@@ -140,5 +192,11 @@ public class Portal {
 
     public void setServer(String server) {
         this.server = server;
+    }
+
+    public String toString(){
+        String minLoc = "/" + getMinLoc().getWorld() + "/"  + getMinLoc().getX() + "/" + getMinLoc().getY() + "/"  + getMinLoc().getZ();
+        String maxLoc = getMaxLoc().getX() + "/" + getMaxLoc().getY() + "/"  + getMaxLoc().getZ();
+        return getName() + ":" + getType() + ":" + getDestination() + ":" + getFillType() + ":" + minLoc + "/" + maxLoc;
     }
 }

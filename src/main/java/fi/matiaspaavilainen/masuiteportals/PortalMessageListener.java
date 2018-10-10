@@ -19,6 +19,10 @@ public class PortalMessageListener implements Listener {
     private Configuration config = new Configuration();
     private Formator formator = new Formator();
 
+    private MaSuitePortals plugin;
+    public PortalMessageListener(MaSuitePortals p){
+        plugin = p;
+    }
     @EventHandler
     public void onMessageReceived(PluginMessageEvent e) {
         if (e.getTag().equals("BungeeCord")) {
@@ -62,13 +66,8 @@ public class PortalMessageListener implements Listener {
                         portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3])));
                         portal.save();
                     }
-                    if(childchannel.equals("SendPlayer")){
-                        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
-                        if (p == null) {
-                            return;
-                        }
-                        Portal portal = new Portal();
-                        p.connect(ProxyServer.getInstance().getServerInfo("freebuild"));
+                    if(childchannel.equals("RequestPortals")){
+                        plugin.sendPortalList();
                     }
                 }
             } catch (IOException e1) {
