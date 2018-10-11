@@ -195,8 +195,8 @@ public class Portal {
     }
 
     public String toString(){
-        String minLoc = "/" + getMinLoc().getWorld() + "/"  + getMinLoc().getX() + "/" + getMinLoc().getY() + "/"  + getMinLoc().getZ();
-        String maxLoc = getMaxLoc().getX() + "/" + getMaxLoc().getY() + "/"  + getMaxLoc().getZ();
-        return getName() + ":" + getType() + ":" + getDestination() + ":" + getFillType() + ":" + minLoc + "/" + maxLoc;
+        String minLoc = getMinLoc().getWorld() + ":"  + getMinLoc().getX() + ":" + getMinLoc().getY() + ":"  + getMinLoc().getZ();
+        String maxLoc = getMaxLoc().getX() + ":" + getMaxLoc().getY() + ":"  + getMaxLoc().getZ();
+        return getName() + ":" + getType() + ":" + getDestination() + ":" + getFillType() + ":" + minLoc + ":" + maxLoc;
     }
 }

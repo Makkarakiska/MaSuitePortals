@@ -9,6 +9,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 
 public class MaSuitePortals extends Plugin {
 
@@ -55,21 +57,22 @@ public class MaSuitePortals extends Plugin {
 
     public void sendPortalList(){
         Portal p = new Portal();
+        Set<Portal> portalSet = p.all();
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         for (Map.Entry<String, ServerInfo> entry : getProxy().getServers().entrySet()) {
             ServerInfo serverInfo = entry.getValue();
             serverInfo.ping((result, error) -> {
                 if (error == null) {
-                    StringBuilder portals = new StringBuilder();
-                    p.all().forEach(portal -> {
+                    StringJoiner portals = new StringJoiner("|");
+                    portalSet.forEach(portal -> {
                         if(serverInfo.getName().equals(portal.getServer())){
-                            portals.append(portal.toString()).append("--");
+                            portals.add(portal.toString());
+                            System.out.println(portal.toString());
                         }
                     });
                     out.writeUTF("MaSuitePortals");
                     out.writeUTF("PortalList");
                     out.writeUTF(portals.toString());
-                    System.out.println(portals.toString());
                     serverInfo.sendData("BungeeCord", out.toByteArray());
                 }
             });
