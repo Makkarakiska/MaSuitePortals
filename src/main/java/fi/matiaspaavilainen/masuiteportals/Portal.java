@@ -38,7 +38,7 @@ public class Portal {
         this.maxLoc = maxLoc;
     }
 
-    public void save(){
+    public Boolean save(){
         String insert = "INSERT INTO " + tablePrefix +
                 "portals (name, server, type, destination, filltype, world, minX, minY, minZ, maxX, maxY, maxZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE server = ?, type = ?, destination = ?, filltype = ?, world = ?, minX = ?, minY = ?, minZ = ?, maxX = ?, maxY = ?, maxZ = ?;";
@@ -69,8 +69,10 @@ public class Portal {
             statement.setDouble(22, getMaxLoc().getY());
             statement.setDouble(23, getMaxLoc().getZ());
             statement.execute();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         } finally {
             if(connection != null){
                 try {
@@ -136,6 +138,84 @@ public class Portal {
             }
         }
         return portals;
+    }
+
+    public Portal find(String name){
+        Portal portal = new Portal();
+        ResultSet rs = null;
+
+        try {
+            connection = db.hikari.getConnection();
+            statement = connection.prepareStatement("SELECT * FROM " + tablePrefix + "warps WHERE name = ?");
+            statement.setString(1, name);
+            rs = statement.executeQuery();
+
+            if(rs == null){
+                return null;
+            }
+            while (rs.next()) {
+                portal.setName(rs.getString("name"));
+                portal.setServer(rs.getString("server"));
+                portal.setType(rs.getString("type"));
+                portal.setDestination(rs.getString("destination"));
+                portal.setFillType(rs.getString("filltype"));
+                portal.setMinLoc(new Location(rs.getString("world"), rs.getDouble("minX"), rs.getDouble("minY"), rs.getDouble("minZ")));
+                portal.setMaxLoc(new Location(rs.getString("world"), rs.getDouble("maxX"), rs.getDouble("maxY"), rs.getDouble("maxZ")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return portal;
+    }
+
+    public Boolean delete(){
+        try {
+            connection = db.hikari.getConnection();
+            statement = connection.prepareStatement("DELETE FROM " + tablePrefix + "portals WHERE name = ?;");
+            statement.setString(1, getName());
+            statement.execute();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public String getName() {

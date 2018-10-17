@@ -1,4 +1,6 @@
 server-not-found: "&cCannot find server with that name"
+no-permission: "&cNo permissions"
 portal:
   set: "&aCreated portal with name %name% and destination %destination%"
   delete: "&aDeleted portal with name %name%"
+  not-found: "&cPortal not found"
