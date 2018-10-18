@@ -4,13 +4,11 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fi.matiaspaavilainen.masuitecore.config.Configuration;
 import fi.matiaspaavilainen.masuiteportals.database.Database;
-import fi.matiaspaavilainen.masuitecore.Updator;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.StringJoiner;
 
 public class MaSuitePortals extends Plugin {
 
@@ -55,7 +53,7 @@ public class MaSuitePortals extends Plugin {
         // new Updator().checkVersion(this.getDescription(), "");
     }
 
-    public void sendPortalList(){
+    public void sendPortalList() {
         Portal p = new Portal();
         Set<Portal> portalSet = p.all();
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -63,17 +61,15 @@ public class MaSuitePortals extends Plugin {
             ServerInfo serverInfo = entry.getValue();
             serverInfo.ping((result, error) -> {
                 if (error == null) {
-                    StringJoiner portals = new StringJoiner("|");
                     portalSet.forEach(portal -> {
-                        if(serverInfo.getName().equals(portal.getServer())){
-                            portals.add(portal.toString());
-                            System.out.println(portal.toString());
+                        if (serverInfo.getName().equals(portal.getServer())) {
+                            out.writeUTF("MaSuitePortals");
+                            out.writeUTF("CreatePortal");
+                            out.writeUTF(portal.toString());
+                            serverInfo.sendData("BungeeCord", out.toByteArray());
                         }
                     });
-                    out.writeUTF("MaSuitePortals");
-                    out.writeUTF("PortalList");
-                    out.writeUTF(portals.toString());
-                    serverInfo.sendData("BungeeCord", out.toByteArray());
+
                 }
             });
         }

@@ -1,5 +1,7 @@
 package fi.matiaspaavilainen.masuiteportals;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import fi.matiaspaavilainen.masuitecore.chat.Formator;
 import fi.matiaspaavilainen.masuitecore.config.Configuration;
 import fi.matiaspaavilainen.masuitecore.managers.Location;
@@ -101,7 +103,11 @@ public class PortalMessageListener implements Listener {
                             // If delete successful, info
                             if (portal.delete()) {
                                 formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.deleted"));
-                                plugin.sendPortalList();
+                                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                                out.writeUTF("MaSuitePortals");
+                                out.writeUTF("DeletePortal");
+                                out.writeUTF(portal.getName());
+                                ProxyServer.getInstance().getServerInfo(portal.getServer()).sendData("BungeeCord", out.toByteArray());
                             } else {
                                 System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
                             }
