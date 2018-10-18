@@ -105,6 +105,8 @@ public class PortalMessageListener implements Listener {
                             } else {
                                 System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
                             }
+                        }else {
+                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("no-permission"));
                         }
                     }
                     if (childchannel.equals("RequestPortals")) {
