@@ -1,0 +1,5 @@
+name: MaSuitePortals
+main: fi.matiaspaavilainen.masuiteportals.MaSuitePortals
+version: 1.0
+author: Masagameplay
+depends: [MaSuiteCore]
