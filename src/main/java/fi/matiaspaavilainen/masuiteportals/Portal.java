@@ -146,7 +146,7 @@ public class Portal {
 
         try {
             connection = db.hikari.getConnection();
-            statement = connection.prepareStatement("SELECT * FROM " + tablePrefix + "warps WHERE name = ?");
+            statement = connection.prepareStatement("SELECT * FROM " + tablePrefix + "portals WHERE name = ?");
             statement.setString(1, name);
             rs = statement.executeQuery();
 
@@ -196,7 +196,6 @@ public class Portal {
             statement = connection.prepareStatement("DELETE FROM " + tablePrefix + "portals WHERE name = ?;");
             statement.setString(1, getName());
             statement.execute();
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -216,6 +215,7 @@ public class Portal {
                 }
             }
         }
+        return true;
     }
 
     public String getName() {
