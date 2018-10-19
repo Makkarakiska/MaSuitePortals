@@ -4,3 +4,7 @@ portal:
   set: "&aCreated portal with name %name% and destination %destination%"
   deleted: "&aDeleted portal with name %name%"
   not-found: "&cPortal not found"
+  list:
+    title: "&7List of Portals: "
+    name: "&b%portal%"
+    splitter: "&7,"

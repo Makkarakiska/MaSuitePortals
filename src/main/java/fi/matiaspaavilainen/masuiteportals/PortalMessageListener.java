@@ -15,6 +15,8 @@ import net.md_5.bungee.event.EventHandler;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class PortalMessageListener implements Listener {
 
@@ -111,9 +113,30 @@ public class PortalMessageListener implements Listener {
                             } else {
                                 System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
                             }
-                        }else {
+                        } else {
                             formator.sendMessage(p, config.load("portals", "messages.yml").getString("no-permission"));
                         }
+                    }
+                    if (childchannel.equals("List")) {
+                        // Get the player
+                        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
+                        if (p == null) {
+                            return;
+                        }
+
+                        if (p.hasPermission("masuiteportals.portal.list")) {
+                            String name = config.load("portals", "messages.yml").getString("portal.list.name");
+                            StringJoiner list = new StringJoiner(config.load("portals", "messages.yml").getString("portal.list.splitter"));
+                            new Portal().all().forEach(portal -> {
+                                if(portal.getServer().equals(p.getServer().getInfo().getName())){
+                                    list.add(name.replace("%portal%", portal.getName()));
+                                }
+                            });
+
+                            System.out.println(list);
+                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.list.title") + list);
+                        }
+
                     }
                     if (childchannel.equals("RequestPortals")) {
                         plugin.sendPortalList();
