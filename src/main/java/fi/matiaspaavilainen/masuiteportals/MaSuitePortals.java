@@ -54,6 +54,9 @@ public class MaSuitePortals extends Plugin {
         // new Updator().checkVersion(this.getDescription(), "");
     }
 
+    /**
+     * Sends portal list to servers
+     */
     public void sendPortalList() {
         Portal p = new Portal();
         Set<Portal> portalSet = p.all();

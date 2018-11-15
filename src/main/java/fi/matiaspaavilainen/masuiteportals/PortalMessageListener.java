@@ -29,9 +29,12 @@ public class PortalMessageListener implements Listener {
         if (e.getTag().equals("BungeeCord")) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
+                // Get subchannel
                 String subchannel = in.readUTF();
                 if (subchannel.equals("MaSuitePortals")) {
                     String childchannel = in.readUTF();
+
+                    // If childchannel equals SetPortal
                     if (childchannel.equals("SetPortal")) {
                         // Get the player
                         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
