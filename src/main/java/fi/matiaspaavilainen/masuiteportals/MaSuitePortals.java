@@ -1,12 +1,13 @@
 package fi.matiaspaavilainen.masuiteportals;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import fi.matiaspaavilainen.masuitecore.config.Configuration;
 import fi.matiaspaavilainen.masuiteportals.database.Database;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,25 +54,34 @@ public class MaSuitePortals extends Plugin {
         // new Updator().checkVersion(this.getDescription(), "");
     }
 
+    /**
+     * Sends portal list to servers
+     */
     public void sendPortalList() {
         Portal p = new Portal();
         Set<Portal> portalSet = p.all();
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+
         for (Map.Entry<String, ServerInfo> entry : getProxy().getServers().entrySet()) {
             ServerInfo serverInfo = entry.getValue();
             serverInfo.ping((result, error) -> {
                 if (error == null) {
                     portalSet.forEach(portal -> {
                         if (serverInfo.getName().equals(portal.getServer())) {
-                            out.writeUTF("MaSuitePortals");
-                            out.writeUTF("CreatePortal");
-                            out.writeUTF(portal.toString());
-                            serverInfo.sendData("BungeeCord", out.toByteArray());
+                            try (ByteArrayOutputStream b = new ByteArrayOutputStream();
+                                 DataOutputStream out = new DataOutputStream(b)) {
+                                out.writeUTF("MaSuitePortals");
+                                out.writeUTF("CreatePortal");
+                                out.writeUTF(portal.toString());
+                                serverInfo.sendData("BungeeCord", b.toByteArray());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
                 }
             });
         }
+
     }
 }

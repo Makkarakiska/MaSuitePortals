@@ -1,7 +1,5 @@
 package fi.matiaspaavilainen.masuiteportals;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import fi.matiaspaavilainen.masuitecore.chat.Formator;
 import fi.matiaspaavilainen.masuitecore.config.Configuration;
 import fi.matiaspaavilainen.masuitecore.managers.Location;
@@ -12,11 +10,8 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 public class PortalMessageListener implements Listener {
 
@@ -34,9 +29,12 @@ public class PortalMessageListener implements Listener {
         if (e.getTag().equals("BungeeCord")) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
+                // Get subchannel
                 String subchannel = in.readUTF();
                 if (subchannel.equals("MaSuitePortals")) {
                     String childchannel = in.readUTF();
+
+                    // If childchannel equals SetPortal
                     if (childchannel.equals("SetPortal")) {
                         // Get the player
                         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
@@ -44,45 +42,39 @@ public class PortalMessageListener implements Listener {
                             return;
                         }
 
-                        // Check if player has permission
-                        if (p.hasPermission("masuiteportals.portal.set")) {
+                        // Setup portal
+                        Portal portal = new Portal();
+                        portal.setName(in.readUTF());
+                        portal.setServer(p.getServer().getInfo().getName());
+                        portal.setType(in.readUTF());
+                        String destination = in.readUTF();
 
-                            // Setup portal
-                            Portal portal = new Portal();
-                            portal.setName(in.readUTF());
-                            portal.setServer(p.getServer().getInfo().getName());
-                            portal.setType(in.readUTF());
-                            String destination = in.readUTF();
-
-                            // Get portal type
-                            if (portal.getType().equals("server")) {
-                                ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(destination);
-                                if (serverInfo == null) {
-                                    formator.sendMessage(p, config.load("portals", "messages.yml").getString("server-not-found"));
-                                    return;
-                                } else {
-                                    portal.setDestination(destination);
-                                }
-
-                            } else if (portal.getType().equals("warp")) {
+                        // Get portal type
+                        if (portal.getType().equals("server")) {
+                            ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(destination);
+                            if (serverInfo == null) {
+                                formator.sendMessage(p, config.load("portals", "messages.yml").getString("server-not-found"));
+                                return;
+                            } else {
                                 portal.setDestination(destination);
                             }
-                            portal.setFillType(in.readUTF());
-                            String[] minLoc = in.readUTF().split(":");
-                            portal.setMinLoc(new Location(minLoc[0], Double.parseDouble(minLoc[1]), Double.parseDouble(minLoc[2]), Double.parseDouble(minLoc[3])));
-                            String[] maxLoc = in.readUTF().split(":");
-                            portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3])));
 
-                            // Save the portal
-                            if (portal.save()) {
-                                formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.set"));
-                            } else {
-                                System.out.println("[MaSuite] [Portals] There was an error during saving process.");
-                            }
-                            plugin.sendPortalList();
-                        } else {
-                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("no-permission"));
+                        } else if (portal.getType().equals("warp")) {
+                            portal.setDestination(destination);
                         }
+                        portal.setFillType(in.readUTF());
+                        String[] minLoc = in.readUTF().split(":");
+                        portal.setMinLoc(new Location(minLoc[0], Double.parseDouble(minLoc[1]), Double.parseDouble(minLoc[2]), Double.parseDouble(minLoc[3])));
+                        String[] maxLoc = in.readUTF().split(":");
+                        portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3])));
+
+                        // Save the portal
+                        if (portal.save()) {
+                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.set").replace("%name%", portal.getName()).replace("%destination%", portal.getDestination()));
+                        } else {
+                            System.out.println("[MaSuite] [Portals] There was an error during saving process.");
+                        }
+                        plugin.sendPortalList();
                     }
 
                     if (childchannel.equals("DelPortal")) {
@@ -91,30 +83,28 @@ public class PortalMessageListener implements Listener {
                         if (p == null) {
                             return;
                         }
+                        Portal portal = new Portal().find(in.readUTF());
 
-                        // If player has permission
-                        if (p.hasPermission("masuiteportals.portal.delete")) {
-                            Portal portal = new Portal().find(in.readUTF());
+                        // If portal is null, return not found message
+                        if (portal == null) {
+                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.not-found"));
+                            return;
+                        }
 
-                            // If portal is null, return not found message
-                            if (portal == null) {
-                                formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.not-found"));
-                                return;
-                            }
-
-                            // If delete successful, info
-                            if (portal.delete()) {
-                                formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.deleted"));
-                                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                        // If delete successful, info
+                        if (portal.delete()) {
+                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.deleted").replace("%name%", portal.getName()));
+                            try (ByteArrayOutputStream b = new ByteArrayOutputStream();
+                                 DataOutputStream out = new DataOutputStream(b)) {
                                 out.writeUTF("MaSuitePortals");
                                 out.writeUTF("DeletePortal");
                                 out.writeUTF(portal.getName());
-                                ProxyServer.getInstance().getServerInfo(portal.getServer()).sendData("BungeeCord", out.toByteArray());
-                            } else {
-                                System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
+                                ProxyServer.getInstance().getServerInfo(portal.getServer()).sendData("BungeeCord", b.toByteArray());
+                            } catch (IOException ex) {
+                                ex.getStackTrace();
                             }
                         } else {
-                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("no-permission"));
+                            System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
                         }
                     }
                     if (childchannel.equals("List")) {
@@ -124,19 +114,17 @@ public class PortalMessageListener implements Listener {
                             return;
                         }
 
-                        if (p.hasPermission("masuiteportals.portal.list")) {
-                            String name = config.load("portals", "messages.yml").getString("portal.list.name");
-                            StringJoiner list = new StringJoiner(config.load("portals", "messages.yml").getString("portal.list.splitter"));
-                            new Portal().all().forEach(portal -> {
-                                if(portal.getServer().equals(p.getServer().getInfo().getName())){
-                                    list.add(name.replace("%portal%", portal.getName()));
-                                }
-                            });
+                        String name = config.load("portals", "messages.yml").getString("portal.list.name");
+                        StringJoiner list = new StringJoiner(config.load("portals", "messages.yml").getString("portal.list.splitter"));
 
-                            System.out.println(list);
-                            formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.list.title") + list);
-                        }
+                        // Loop every portal and add items to list
+                        new Portal().all().forEach(portal -> {
+                            if (portal.getServer().equals(p.getServer().getInfo().getName())) {
+                                list.add(name.replace("%portal%", portal.getName()));
+                            }
+                        });
 
+                        formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.list.title") + list);
                     }
                     if (childchannel.equals("RequestPortals")) {
                         plugin.sendPortalList();

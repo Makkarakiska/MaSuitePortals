@@ -28,6 +28,16 @@ public class Portal {
 
     public Portal(){}
 
+    /**
+     * Constructor for Portal
+     * @param name portal's name
+     * @param server portal's server
+     * @param type portal's type
+     * @param destination portal's destination
+     * @param fillType portal's fill type
+     * @param minLoc portal's first position
+     * @param maxLoc portal's second position
+     */
     public Portal(String name, String server, String type, String destination, String fillType, Location minLoc, Location maxLoc) {
         this.name = name;
         this.server = server;
@@ -38,6 +48,10 @@ public class Portal {
         this.maxLoc = maxLoc;
     }
 
+    /**
+     * Save portal
+     * @return boolean
+     */
     public Boolean save(){
         String insert = "INSERT INTO " + tablePrefix +
                 "portals (name, server, type, destination, filltype, world, minX, minY, minZ, maxX, maxY, maxZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
@@ -91,6 +105,10 @@ public class Portal {
         }
     }
 
+    /**
+     * Get all portals
+     * @return list of portals
+     */
     public Set<Portal> all(){
         Set<Portal> portals = new HashSet<>();
         ResultSet rs = null;
@@ -140,6 +158,11 @@ public class Portal {
         return portals;
     }
 
+    /**
+     * Find portal by name
+     * @param name portal's name
+     * @return Portal
+     */
     public Portal find(String name){
         Portal portal = new Portal();
         ResultSet rs = null;
@@ -190,6 +213,10 @@ public class Portal {
         return portal;
     }
 
+    /**
+     * Delete portal
+     * @return boolean
+     */
     public Boolean delete(){
         try {
             connection = db.hikari.getConnection();
@@ -274,6 +301,10 @@ public class Portal {
         this.server = server;
     }
 
+    /**
+     * Creates string from Portal info
+     * @return string made of Portal info
+     */
     public String toString(){
         String minLoc = getMinLoc().getWorld() + ":"  + getMinLoc().getX() + ":" + getMinLoc().getY() + ":"  + getMinLoc().getZ();
         String maxLoc = getMaxLoc().getX() + ":" + getMaxLoc().getY() + ":"  + getMaxLoc().getZ();
