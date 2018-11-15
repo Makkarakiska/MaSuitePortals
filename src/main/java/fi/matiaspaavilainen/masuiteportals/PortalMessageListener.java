@@ -86,7 +86,7 @@ public class PortalMessageListener implements Listener {
                         Portal portal = new Portal().find(in.readUTF());
 
                         // If portal is null, return not found message
-                        if (portal == null) {
+                        if (portal.getServer() == null) {
                             formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.not-found"));
                             return;
                         }
