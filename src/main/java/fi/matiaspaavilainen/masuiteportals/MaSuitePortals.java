@@ -1,5 +1,6 @@
 package fi.matiaspaavilainen.masuiteportals;
 
+import fi.matiaspaavilainen.masuitecore.Updator;
 import fi.matiaspaavilainen.masuitecore.config.Configuration;
 import fi.matiaspaavilainen.masuiteportals.database.Database;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -49,8 +50,7 @@ public class MaSuitePortals extends Plugin {
         sendPortalList();
 
         // Updator
-        // TODO: Add ID after update
-        // new Updator().checkVersion(this.getDescription(), "");
+        new Updator().checkVersion(this.getDescription(), "62434");
     }
 
     /**
