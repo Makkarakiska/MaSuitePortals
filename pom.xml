@@ -6,7 +6,7 @@
 
     <groupId>fi.matiaspaavilainen</groupId>
     <artifactId>MaSuitePortals</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <build>
         <finalName>MaSuitePortals</finalName>
         <plugins>
