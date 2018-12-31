@@ -1,8 +1,9 @@
-package fi.matiaspaavilainen.masuiteportals;
+package fi.matiaspaavilainen.masuiteportals.bungee;
 
-import fi.matiaspaavilainen.masuitecore.chat.Formator;
-import fi.matiaspaavilainen.masuitecore.config.Configuration;
-import fi.matiaspaavilainen.masuitecore.managers.Location;
+import fi.matiaspaavilainen.masuitecore.bungee.chat.Formator;
+import fi.matiaspaavilainen.masuitecore.core.configuration.BungeeConfiguration;
+import fi.matiaspaavilainen.masuitecore.core.objects.Location;
+import fi.matiaspaavilainen.masuiteportals.core.Portal;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,7 +16,7 @@ import java.util.StringJoiner;
 
 public class PortalMessageListener implements Listener {
 
-    private Configuration config = new Configuration();
+    private BungeeConfiguration config = new BungeeConfiguration();
     private Formator formator = new Formator();
 
     private MaSuitePortals plugin;

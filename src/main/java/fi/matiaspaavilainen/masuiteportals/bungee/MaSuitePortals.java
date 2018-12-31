@@ -1,10 +1,12 @@
-package fi.matiaspaavilainen.masuiteportals;
+package fi.matiaspaavilainen.masuiteportals.bungee;
 
-import fi.matiaspaavilainen.masuitecore.Updator;
-import fi.matiaspaavilainen.masuitecore.config.Configuration;
-import fi.matiaspaavilainen.masuiteportals.database.Database;
+import fi.matiaspaavilainen.masuitecore.core.Updator;
+import fi.matiaspaavilainen.masuitecore.core.configuration.BungeeConfiguration;
+import fi.matiaspaavilainen.masuitecore.core.database.ConnectionManager;
+import fi.matiaspaavilainen.masuiteportals.core.Portal;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -14,21 +16,23 @@ import java.util.Set;
 
 public class MaSuitePortals extends Plugin {
 
-    public static Database db = new Database();
+    private BungeeConfiguration config = new BungeeConfiguration();
+    private ConnectionManager cm = null;
 
     @Override
     public void onEnable() {
         super.onEnable();
 
         // Create configs
-        Configuration config = new Configuration();
-        config.create(this, "portals", "messages.yml");
+        config.create("portals", "messages.yml");
 
         // Connect to database
-        db.connect();
+        Configuration dbInfo = config.load(null, "config.yml");
+        cm = new ConnectionManager(dbInfo.getString("database.table-prefix"), dbInfo.getString("database.address"), dbInfo.getInt("database.port"), dbInfo.getString("database.name"), dbInfo.getString("database.username"), dbInfo.getString("database.password"));
+        cm.connect();
 
         // Create portals table
-        db.createTable("portals",
+        cm.getDatabase().createTable("portals",
                 "(id INT(10) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                         "name VARCHAR(100) UNIQUE NOT NULL , " +
                         "server VARCHAR(100) NOT NULL, " +
@@ -50,7 +54,7 @@ public class MaSuitePortals extends Plugin {
         sendPortalList();
 
         // Updator
-        new Updator().checkVersion(this.getDescription(), "62434");
+        new Updator(new String[]{getDescription().getVersion(), getDescription().getName(), "62434"}).checkUpdates();
     }
 
     /**
