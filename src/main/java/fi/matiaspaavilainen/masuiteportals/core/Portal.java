@@ -1,8 +1,8 @@
-package fi.matiaspaavilainen.masuiteportals;
+package fi.matiaspaavilainen.masuiteportals.core;
 
-import fi.matiaspaavilainen.masuitecore.config.Configuration;
-import fi.matiaspaavilainen.masuitecore.managers.Location;
-import fi.matiaspaavilainen.masuiteportals.database.Database;
+import fi.matiaspaavilainen.masuitecore.core.database.ConnectionManager;
+import fi.matiaspaavilainen.masuitecore.core.database.Database;
+import fi.matiaspaavilainen.masuitecore.core.objects.Location;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,11 +13,10 @@ import java.util.Set;
 
 public class Portal {
 
-    private Database db = MaSuitePortals.db;
+    private Database db = ConnectionManager.db;
     private Connection connection = null;
     private PreparedStatement statement = null;
-    private Configuration config = new Configuration();
-    private String tablePrefix = config.load(null, "config.yml").getString("database.table-prefix");
+    private String tablePrefix = db.getTablePrefix();
 
     private String name;
     private String server;
@@ -26,17 +25,19 @@ public class Portal {
     private String fillType;
     private Location minLoc, maxLoc;
 
-    public Portal(){}
+    public Portal() {
+    }
 
     /**
      * Constructor for Portal
-     * @param name portal's name
-     * @param server portal's server
-     * @param type portal's type
+     *
+     * @param name        portal's name
+     * @param server      portal's server
+     * @param type        portal's type
      * @param destination portal's destination
-     * @param fillType portal's fill type
-     * @param minLoc portal's first position
-     * @param maxLoc portal's second position
+     * @param fillType    portal's fill type
+     * @param minLoc      portal's first position
+     * @param maxLoc      portal's second position
      */
     public Portal(String name, String server, String type, String destination, String fillType, Location minLoc, Location maxLoc) {
         this.name = name;
@@ -50,9 +51,10 @@ public class Portal {
 
     /**
      * Save portal
+     *
      * @return boolean
      */
-    public Boolean save(){
+    public Boolean save() {
         String insert = "INSERT INTO " + tablePrefix +
                 "portals (name, server, type, destination, filltype, world, minX, minY, minZ, maxX, maxY, maxZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE server = ?, type = ?, destination = ?, filltype = ?, world = ?, minX = ?, minY = ?, minZ = ?, maxX = ?, maxY = ?, maxZ = ?;";
@@ -84,18 +86,18 @@ public class Portal {
             statement.setDouble(23, getMaxLoc().getZ());
             statement.execute();
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         } finally {
-            if(connection != null){
+            if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            if(statement != null){
+            if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException e) {
@@ -107,9 +109,10 @@ public class Portal {
 
     /**
      * Get all portals
+     *
      * @return list of portals
      */
-    public Set<Portal> all(){
+    public Set<Portal> all() {
         Set<Portal> portals = new HashSet<>();
         ResultSet rs = null;
 
@@ -160,10 +163,11 @@ public class Portal {
 
     /**
      * Find portal by name
+     *
      * @param name portal's name
      * @return Portal
      */
-    public Portal find(String name){
+    public Portal find(String name) {
         Portal portal = new Portal();
         ResultSet rs = null;
 
@@ -173,7 +177,7 @@ public class Portal {
             statement.setString(1, name);
             rs = statement.executeQuery();
 
-            if(rs == null){
+            if (rs == null) {
                 return null;
             }
             while (rs.next()) {
@@ -215,9 +219,10 @@ public class Portal {
 
     /**
      * Delete portal
+     *
      * @return boolean
      */
-    public Boolean delete(){
+    public Boolean delete() {
         try {
             connection = db.hikari.getConnection();
             statement = connection.prepareStatement("DELETE FROM " + tablePrefix + "portals WHERE name = ?;");
@@ -303,11 +308,12 @@ public class Portal {
 
     /**
      * Creates string from Portal info
+     *
      * @return string made of Portal info
      */
-    public String toString(){
-        String minLoc = getMinLoc().getWorld() + ":"  + getMinLoc().getX() + ":" + getMinLoc().getY() + ":"  + getMinLoc().getZ();
-        String maxLoc = getMaxLoc().getX() + ":" + getMaxLoc().getY() + ":"  + getMaxLoc().getZ();
+    public String toString() {
+        String minLoc = getMinLoc().getWorld() + ":" + getMinLoc().getX() + ":" + getMinLoc().getY() + ":" + getMinLoc().getZ();
+        String maxLoc = getMaxLoc().getX() + ":" + getMaxLoc().getY() + ":" + getMaxLoc().getZ();
         return getName() + ":" + getType() + ":" + getDestination() + ":" + getFillType() + ":" + minLoc + ":" + maxLoc;
     }
 }

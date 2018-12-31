@@ -1,13 +1,13 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import fi.matiaspaavilainen.masuitecore.bukkit.MaSuiteCore;
 import fi.matiaspaavilainen.masuiteportals.bukkit.commands.Delete;
 import fi.matiaspaavilainen.masuiteportals.bukkit.commands.List;
 import fi.matiaspaavilainen.masuiteportals.bukkit.commands.Set;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.MovementListener;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PhysicsListener;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PortalsMessageListener;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -55,8 +55,10 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
      * Register listener
      */
     private void registerListener() {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PortalsMessageListener(this));
+        if (MaSuiteCore.bungee) {
+            getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+            getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PortalsMessageListener(this));
+        }
 
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
         getServer().getPluginManager().registerEvents(new PhysicsListener(), this);
@@ -84,16 +86,6 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
                 ex.printStackTrace();
             }
         }
-    }
-
-    /**
-     * Colorize string
-     *
-     * @param s string to colorize
-     * @return colorized string
-     */
-    public static String colorize(String s) {
-        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
 }

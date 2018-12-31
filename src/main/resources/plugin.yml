@@ -1,7 +1,7 @@
-name: MaSuitePortalsBridge
+name: MaSuitePortals
 version: ${project.version}
 main: fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals
-depend: [WorldEdit]
+depend: [WorldEdit, MaSuiteCore]
 authors: [Masa]
 api-version: 1.13
 commands:
