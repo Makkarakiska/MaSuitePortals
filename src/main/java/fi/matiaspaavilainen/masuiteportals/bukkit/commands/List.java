@@ -27,7 +27,7 @@ public class List implements CommandExecutor {
         }
         Player p = (Player) sender;
         if (args.length != 0) {
-            new Formator().sendMessage(p, new BukkitConfiguration(plugin).load("portals", "syntax.yml").getString("portal.list"));
+            new Formator().sendMessage(p, new BukkitConfiguration().load("portals", "syntax.yml").getString("portal.list"));
             return false;
         }
         try (ByteArrayOutputStream b = new ByteArrayOutputStream();

@@ -20,12 +20,11 @@ public class Set implements CommandExecutor {
 
     private MaSuitePortals plugin;
 
-    private BukkitConfiguration config;
+    private BukkitConfiguration config = new BukkitConfiguration();
     private Formator formator = new Formator();
 
     public Set(MaSuitePortals p) {
         plugin = p;
-        config = new BukkitConfiguration(plugin);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class Delete implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return false;
         }
-        BukkitConfiguration config = new BukkitConfiguration(plugin);
+        BukkitConfiguration config = new BukkitConfiguration();
         Player p = (Player) sender;
         if (args.length != 1) {
             new Formator().sendMessage(p, config.load("portals", "syntax.yml").getString("portal.delete"));
