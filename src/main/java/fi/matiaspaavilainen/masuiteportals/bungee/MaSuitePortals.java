@@ -24,7 +24,7 @@ public class MaSuitePortals extends Plugin {
         super.onEnable();
 
         // Create configs
-        config.create("portals", "messages.yml");
+        config.create(this, "portals", "messages.yml");
 
         // Connect to database
         Configuration dbInfo = config.load(null, "config.yml");
