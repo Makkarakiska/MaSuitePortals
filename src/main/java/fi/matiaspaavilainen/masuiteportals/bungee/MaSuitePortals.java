@@ -6,7 +6,6 @@ import fi.matiaspaavilainen.masuitecore.core.database.ConnectionManager;
 import fi.matiaspaavilainen.masuiteportals.core.Portal;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -17,7 +16,6 @@ import java.util.Set;
 public class MaSuitePortals extends Plugin {
 
     private BungeeConfiguration config = new BungeeConfiguration();
-    private ConnectionManager cm = null;
 
     @Override
     public void onEnable() {
@@ -26,13 +24,8 @@ public class MaSuitePortals extends Plugin {
         // Create configs
         config.create(this, "portals", "messages.yml");
 
-        // Connect to database
-        Configuration dbInfo = config.load(null, "config.yml");
-        cm = new ConnectionManager(dbInfo.getString("database.table-prefix"), dbInfo.getString("database.address"), dbInfo.getInt("database.port"), dbInfo.getString("database.name"), dbInfo.getString("database.username"), dbInfo.getString("database.password"));
-        cm.connect();
-
         // Create portals table
-        cm.getDatabase().createTable("portals",
+        ConnectionManager.db.createTable("portals",
                 "(id INT(10) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                         "name VARCHAR(100) UNIQUE NOT NULL , " +
                         "server VARCHAR(100) NOT NULL, " +
