@@ -21,8 +21,8 @@ public class PortalMessageListener implements Listener {
 
     private MaSuitePortals plugin;
 
-    public PortalMessageListener(MaSuitePortals p) {
-        plugin = p;
+    public PortalMessageListener(MaSuitePortals plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
