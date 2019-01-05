@@ -2,6 +2,7 @@ package fi.matiaspaavilainen.masuiteportals.bukkit;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import fi.matiaspaavilainen.masuitecore.bukkit.MaSuiteCore;
+import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
 import fi.matiaspaavilainen.masuiteportals.bukkit.commands.Delete;
 import fi.matiaspaavilainen.masuiteportals.bukkit.commands.List;
 import fi.matiaspaavilainen.masuiteportals.bukkit.commands.Set;
@@ -22,8 +23,14 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
 
     public WorldEditPlugin we = null;
 
+    private BukkitConfiguration config = new BukkitConfiguration();
+
     @Override
     public void onEnable() {
+        //Create configs
+        config.create(this, "portals", "syntax.yml");
+        config.create(this, "portals", "messages.yml");
+
         // Load WorldEdit
         we = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         if (we == null) {
