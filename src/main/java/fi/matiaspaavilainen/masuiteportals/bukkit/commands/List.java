@@ -2,15 +2,12 @@ package fi.matiaspaavilainen.masuiteportals.bukkit.commands;
 
 import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
+import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
 import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class List implements CommandExecutor {
 
@@ -30,15 +27,7 @@ public class List implements CommandExecutor {
             new Formator().sendMessage(p, new BukkitConfiguration().load("portals", "syntax.yml").getString("portal.list"));
             return false;
         }
-        try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-             DataOutputStream out = new DataOutputStream(b)) {
-            out.writeUTF("MaSuitePortals");
-            out.writeUTF("List");
-            out.writeUTF(p.getName());
-            p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new PluginChannel(plugin, p, new Object[]{"MaSuitePortals", "List", p.getName()}).send();
         return false;
     }
 }

@@ -5,16 +5,13 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.regions.Region;
 import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
+import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
 import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class Set implements CommandExecutor {
 
@@ -52,21 +49,9 @@ public class Set implements CommandExecutor {
                 formator.sendMessage(p, config.load("portals", "messages.yml").getString("invalid-material"));
                 return false;
             }
-            try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-                 DataOutputStream out = new DataOutputStream(b)) {
-                out.writeUTF("MaSuitePortals");
-                out.writeUTF("SetPortal");
-                out.writeUTF(p.getName()); // Creator's name
-                out.writeUTF(args[0]); // Portal name
-                out.writeUTF(args[1]); // Portal type
-                out.writeUTF(args[2]); // Portal destination
-                out.writeUTF(args[3]); // Portal fill type
-                out.writeUTF(p.getWorld().getName() + ":" + rg.getMinimumPoint().getBlockX() + ":" + rg.getMinimumPoint().getBlockY() + ":" + rg.getMinimumPoint().getBlockZ()); // Portal min loc
-                out.writeUTF(p.getWorld().getName() + ":" + rg.getMaximumPoint().getX() + ":" + rg.getMaximumPoint().getY() + ":" + rg.getMaximumPoint().getZ()); // Portal max loc
-                p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-            } catch (IOException e) {
-                e.getStackTrace();
-            }
+            String minLoc = p.getWorld().getName() + ":" + rg.getMinimumPoint().getBlockX() + ":" + rg.getMinimumPoint().getBlockY() + ":" + rg.getMinimumPoint().getBlockZ();
+            String maxLoc = p.getWorld().getName() + ":" + rg.getMaximumPoint().getX() + ":" + rg.getMaximumPoint().getY() + ":" + rg.getMaximumPoint().getZ();
+            new PluginChannel(plugin, p, new Object[]{"MaSuitePortals", "SetPortal", p.getName(), args[0], args[1], args[2], args[3], minLoc, maxLoc}).send();
         } catch (IncompleteRegionException e) {
             formator.sendMessage(p, config.load("portals", "messages.yml").getString("no-selected-area"));
             return false;
