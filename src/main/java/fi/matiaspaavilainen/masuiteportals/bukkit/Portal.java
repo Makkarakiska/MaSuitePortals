@@ -1,15 +1,12 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit;
 
+import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.entity.Player;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class Portal {
 
@@ -51,24 +48,10 @@ public class Portal {
      * @param plugin to use in plugin messages
      */
     public void send(Player player, MaSuitePortals plugin) {
-        try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-             DataOutputStream out = new DataOutputStream(b)) {
-            if (getType().equals("server")) {
-                out.writeUTF("ConnectOther");
-                out.writeUTF(player.getName());
-                out.writeUTF(getDestination());
-                player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-            } else if (getType().equals("warp")) {
-
-                out.writeUTF("WarpPlayerCommand");
-                out.writeUTF(player.getName());
-                out.writeUTF("console");
-                out.writeUTF(getDestination());
-
-                player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        if (getType().equals("server")) {
+            new PluginChannel(plugin, player, new Object[]{"ConnectOther", player.getName(), getDestination()}).send();
+        } else if (getType().equals("warp")) {
+            new PluginChannel(plugin, player, new Object[]{"WarpPlayerCommand", player.getName(), "console", getDestination()}).send();
         }
     }
 
