@@ -2,10 +2,11 @@ package fi.matiaspaavilainen.masuiteportals.bukkit;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import fi.matiaspaavilainen.masuitecore.bukkit.MaSuiteCore;
+import fi.matiaspaavilainen.masuitecore.core.Updator;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.Delete;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.List;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.Set;
+import fi.matiaspaavilainen.masuiteportals.bukkit.commands.DeleteCommand;
+import fi.matiaspaavilainen.masuiteportals.bukkit.commands.ListCommand;
+import fi.matiaspaavilainen.masuiteportals.bukkit.commands.SetCommand;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.MovementListener;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PhysicsListener;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PortalsMessageListener;
@@ -38,6 +39,8 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
         }
 
+        new Updator(new String[]{getDescription().getVersion(), getDescription().getName(), "62434"}).checkUpdates();
+        
         // Register and load everything
         registerCommands();
         registerListener();
@@ -53,9 +56,9 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
      * Register commands
      */
     private void registerCommands() {
-        getCommand("setportal").setExecutor(new Set(this));
-        getCommand("delportal").setExecutor(new Delete(this));
-        getCommand("portals").setExecutor(new List(this));
+        getCommand("setportal").setExecutor(new SetCommand(this));
+        getCommand("delportal").setExecutor(new DeleteCommand(this));
+        getCommand("portals").setExecutor(new ListCommand(this));
     }
 
     /**
