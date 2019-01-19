@@ -108,7 +108,7 @@ public class PortalMessageListener implements Listener {
                             System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
                         }
                     }
-                    if (childchannel.equals("List")) {
+                    if (childchannel.equals("ListCommand")) {
                         // Get the player
                         ProxiedPlayer p = ProxyServer.getInstance().getPlayer(in.readUTF());
                         if (p == null) {

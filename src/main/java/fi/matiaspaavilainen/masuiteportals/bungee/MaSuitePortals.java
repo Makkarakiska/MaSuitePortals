@@ -1,15 +1,13 @@
 package fi.matiaspaavilainen.masuiteportals.bungee;
 
 import fi.matiaspaavilainen.masuitecore.core.Updator;
+import fi.matiaspaavilainen.masuitecore.core.channels.BungeePluginChannel;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BungeeConfiguration;
 import fi.matiaspaavilainen.masuitecore.core.database.ConnectionManager;
 import fi.matiaspaavilainen.masuiteportals.core.Portal;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,18 +61,9 @@ public class MaSuitePortals extends Plugin {
                 if (error == null) {
                     portalSet.forEach(portal -> {
                         if (serverInfo.getName().equals(portal.getServer())) {
-                            try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-                                 DataOutputStream out = new DataOutputStream(b)) {
-                                out.writeUTF("MaSuitePortals");
-                                out.writeUTF("CreatePortal");
-                                out.writeUTF(portal.toString());
-                                serverInfo.sendData("BungeeCord", b.toByteArray());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            new BungeePluginChannel(this, serverInfo, new Object[]{"MaSuitePortals", "CreatePortal", portal.toString()}).send();
                         }
                     });
-
                 }
             });
         }
