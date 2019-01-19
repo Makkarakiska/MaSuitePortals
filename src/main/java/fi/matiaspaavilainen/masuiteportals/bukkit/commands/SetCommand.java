@@ -4,8 +4,8 @@ import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.regions.Region;
 import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
+import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
-import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
 import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -13,14 +13,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Set implements CommandExecutor {
+public class SetCommand implements CommandExecutor {
 
     private MaSuitePortals plugin;
 
     private BukkitConfiguration config = new BukkitConfiguration();
     private Formator formator = new Formator();
 
-    public Set(MaSuitePortals p) {
+    public SetCommand(MaSuitePortals p) {
         plugin = p;
     }
 
@@ -51,7 +51,7 @@ public class Set implements CommandExecutor {
             }
             String minLoc = p.getWorld().getName() + ":" + rg.getMinimumPoint().getBlockX() + ":" + rg.getMinimumPoint().getBlockY() + ":" + rg.getMinimumPoint().getBlockZ();
             String maxLoc = p.getWorld().getName() + ":" + rg.getMaximumPoint().getX() + ":" + rg.getMaximumPoint().getY() + ":" + rg.getMaximumPoint().getZ();
-            new PluginChannel(plugin, p, new Object[]{"MaSuitePortals", "SetPortal", p.getName(), args[0], args[1], args[2], args[3], minLoc, maxLoc}).send();
+            new BukkitPluginChannel(plugin, p, new Object[]{"MaSuitePortals", "SetPortal", p.getName(), args[0], args[1], args[2], args[3], minLoc, maxLoc}).send();
         } catch (IncompleteRegionException e) {
             formator.sendMessage(p, config.load("portals", "messages.yml").getString("no-selected-area"));
             return false;

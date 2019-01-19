@@ -1,19 +1,19 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit.commands;
 
 import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
+import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
-import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
 import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class List implements CommandExecutor {
+public class ListCommand implements CommandExecutor {
 
     private MaSuitePortals plugin;
 
-    public List(MaSuitePortals plugin) {
+    public ListCommand(MaSuitePortals plugin) {
         this.plugin = plugin;
     }
 
@@ -27,7 +27,7 @@ public class List implements CommandExecutor {
             new Formator().sendMessage(p, new BukkitConfiguration().load("portals", "syntax.yml").getString("portal.list"));
             return false;
         }
-        new PluginChannel(plugin, p, new Object[]{"MaSuitePortals", "List", p.getName()}).send();
+        new BukkitPluginChannel(plugin, p, new Object[]{"MaSuitePortals", "ListCommand", p.getName()}).send();
         return false;
     }
 }

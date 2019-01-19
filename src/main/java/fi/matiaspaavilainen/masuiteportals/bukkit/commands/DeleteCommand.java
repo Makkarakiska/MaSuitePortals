@@ -1,20 +1,20 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit.commands;
 
 import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
+import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
-import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
 import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Delete implements CommandExecutor {
+public class DeleteCommand implements CommandExecutor {
 
     private MaSuitePortals plugin;
 
 
-    public Delete(MaSuitePortals p) {
+    public DeleteCommand(MaSuitePortals p) {
         plugin = p;
     }
 
@@ -29,7 +29,7 @@ public class Delete implements CommandExecutor {
             new Formator().sendMessage(p, config.load("portals", "syntax.yml").getString("portal.delete"));
             return false;
         }
-        new PluginChannel(plugin, p, new Object[]{"MaSuitePortals", "DelPortal", p.getName(), args[0]}).send();
+        new BukkitPluginChannel(plugin, p, new Object[]{"MaSuitePortals", "DelPortal", p.getName(), args[0]}).send();
         return false;
     }
 }
