@@ -59,6 +59,7 @@ public class Portal {
      * Fills portal
      */
     public void fillPortal() {
+        System.out.println("[MaSuite] [Portals] Filling portal " + this.name + " with " + this.fillType);
         PortalRegion pr = new PortalRegion(getMinLoc(), getMaxLoc());
         pr.blockList().forEach(block -> {
             if (block.getBlockData().getMaterial().equals(Material.AIR)) {
@@ -99,6 +100,7 @@ public class Portal {
      * Sets portal material to {@link Material#AIR}
      */
     public void clearPortal() {
+        System.out.println("[MaSuite] [Portals] Clearing portal " + this.name);
         PortalRegion pr = new PortalRegion(getMinLoc(), getMaxLoc());
         pr.blockList().forEach(block -> {
             if (block.getType().toString().toLowerCase().equals(getFillType())) {

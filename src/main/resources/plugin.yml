@@ -3,7 +3,7 @@ version: ${project.version}
 main: fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals
 depend: [WorldEdit, MaSuiteCore]
 authors: [Masa]
-api-version: 1.13
+api-version: 1.14
 commands:
   setportal:
     description: Sets portal
