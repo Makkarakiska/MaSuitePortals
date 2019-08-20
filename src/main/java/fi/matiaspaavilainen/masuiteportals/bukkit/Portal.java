@@ -1,6 +1,6 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit;
 
-import fi.matiaspaavilainen.masuitecore.core.objects.PluginChannel;
+import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -49,9 +49,9 @@ public class Portal {
      */
     public void send(Player player, MaSuitePortals plugin) {
         if (getType().equals("server")) {
-            new PluginChannel(plugin, player, new Object[]{"ConnectOther", player.getName(), getDestination()}).send();
+            new BukkitPluginChannel(plugin, player, new Object[]{"ConnectOther", player.getName(), getDestination()}).send();
         } else if (getType().equals("warp")) {
-            new PluginChannel(plugin, player, new Object[]{"WarpPlayerCommand", player.getName(), "console", getDestination()}).send();
+            new BukkitPluginChannel(plugin, player, new Object[]{"WarpPlayerCommand", player.getName(), "console", getDestination()}).send();
         }
     }
 
@@ -59,7 +59,6 @@ public class Portal {
      * Fills portal
      */
     public void fillPortal() {
-        System.out.println("[MaSuite] [Portals] Filling portal " + this.name + " with " + this.fillType);
         PortalRegion pr = new PortalRegion(getMinLoc(), getMaxLoc());
         pr.blockList().forEach(block -> {
             if (block.getBlockData().getMaterial().equals(Material.AIR)) {
@@ -69,14 +68,10 @@ public class Portal {
                     Orientable orientable = (Orientable) block.getBlockData();
                     switch (getFillType().toLowerCase()) {
                         case ("nether_portal_north"):
-                            orientable.setAxis(Axis.X);
-                            break;
-                        case ("nether_portal_east"):
-                            orientable.setAxis(Axis.Z);
-                            break;
                         case ("nether_portal_south"):
                             orientable.setAxis(Axis.X);
                             break;
+                        case ("nether_portal_east"):
                         case ("nether_portal_west"):
                             orientable.setAxis(Axis.Z);
                             break;
@@ -100,7 +95,6 @@ public class Portal {
      * Sets portal material to {@link Material#AIR}
      */
     public void clearPortal() {
-        System.out.println("[MaSuite] [Portals] Clearing portal " + this.name);
         PortalRegion pr = new PortalRegion(getMinLoc(), getMaxLoc());
         pr.blockList().forEach(block -> {
             if (block.getType().toString().toLowerCase().equals(getFillType())) {

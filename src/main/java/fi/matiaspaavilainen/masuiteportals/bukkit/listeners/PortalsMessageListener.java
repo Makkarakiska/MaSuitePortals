@@ -39,7 +39,6 @@ public class PortalsMessageListener implements PluginMessageListener {
                 if (childchannel.equals("CreatePortal")) {
                     // Split portal information
                     String[] p = in.readUTF().toLowerCase().split(":");
-
                     // If portal's world is not null
                     if (Bukkit.getWorld(p[4]) != null) {
                         Portal portal = null;
@@ -66,9 +65,7 @@ public class PortalsMessageListener implements PluginMessageListener {
                                         return;
                                     }
                                 }
-
                             }
-
                         } else {
                             // Create portal from values
                             portal = new Portal(p[0], p[1], p[2], p[3],
