@@ -32,11 +32,12 @@ public class Portal {
     @Column(name = "destination")
     private String destination;
 
-    @Column(name = "filltpye")
+    @Column(name = "filltype")
     private String fillType;
 
     @Embedded
     @AttributeOverrides(value = {
+            @AttributeOverride(name = "world", column = @Column(name = "world")),
             @AttributeOverride(name = "x", column = @Column(name = "minX")),
             @AttributeOverride(name = "y", column = @Column(name = "minY")),
             @AttributeOverride(name = "z", column = @Column(name = "minZ")),
@@ -48,6 +49,7 @@ public class Portal {
 
     @Embedded
     @AttributeOverrides(value = {
+            @AttributeOverride(name = "world", column = @Column(name = "world", insertable = false, updatable = false)),
             @AttributeOverride(name = "x", column = @Column(name = "maxX")),
             @AttributeOverride(name = "y", column = @Column(name = "maxY")),
             @AttributeOverride(name = "z", column = @Column(name = "maxZ")),
