@@ -1,6 +1,8 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit;
 
 import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,6 +10,8 @@ import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.entity.Player;
 
+@Data
+@AllArgsConstructor
 public class Portal {
 
     private String name;
@@ -15,12 +19,6 @@ public class Portal {
     private String destination;
     private Location minLoc, maxLoc;
     private String fillType;
-
-    /**
-     * An empty constructor for Portal
-     */
-    public Portal() {
-    }
 
     /**
      * Constructor for Portal
@@ -113,90 +111,5 @@ public class Portal {
         String minLoc = getMinLoc().getWorld() + ":" + getMinLoc().getX() + ":" + getMinLoc().getY() + ":" + getMinLoc().getZ();
         String maxLoc = getMaxLoc().getX() + ":" + getMaxLoc().getY() + ":" + getMaxLoc().getZ();
         return getName() + ":" + getType() + ":" + getDestination() + ":" + getFillType() + ":" + minLoc + ":" + maxLoc;
-    }
-
-    /**
-     * @return first corner of the portal
-     */
-    public Location getMinLoc() {
-        return minLoc;
-    }
-
-    /**
-     * @param minLoc first corner of the portal
-     */
-    public void setMinLoc(Location minLoc) {
-        this.minLoc = minLoc;
-    }
-
-    /**
-     * @return second corner of the portal
-     */
-    public Location getMaxLoc() {
-        return maxLoc;
-    }
-
-    /**
-     * @param maxLoc second corner of the portal
-     */
-    public void setMaxLoc(Location maxLoc) {
-        this.maxLoc = maxLoc;
-    }
-
-    /**
-     * @return {@link Material} used to fill the portal
-     */
-    public String getFillType() {
-        return fillType;
-    }
-
-    /**
-     * @param fillType {@link Material} used to fill the portal
-     */
-    public void setFillType(String fillType) {
-        this.fillType = fillType;
-    }
-
-    /**
-     * @return name of portal
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name name of the portal
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return type of portal
-     */
-
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * @param type type of the portal
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * @return destination of the portal
-     */
-    public String getDestination() {
-        return destination;
-    }
-
-    /**
-     * @param destination destination of the portal
-     */
-    public void setDestination(String destination) {
-        this.destination = destination;
     }
 }
