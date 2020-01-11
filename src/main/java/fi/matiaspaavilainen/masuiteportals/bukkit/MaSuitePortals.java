@@ -1,12 +1,12 @@
 package fi.matiaspaavilainen.masuiteportals.bukkit;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import fi.matiaspaavilainen.masuitecore.bukkit.MaSuiteCore;
+import fi.matiaspaavilainen.masuitecore.acf.PaperCommandManager;
+import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
 import fi.matiaspaavilainen.masuitecore.core.Updator;
+import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
 import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.DeleteCommand;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.ListCommand;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.SetCommand;
+import fi.matiaspaavilainen.masuiteportals.bukkit.commands.PortalCommand;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.MovementListener;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PhysicsListener;
 import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PortalsMessageListener;
@@ -15,16 +15,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MaSuitePortals extends JavaPlugin implements Listener {
 
     public WorldEditPlugin we = null;
 
-    private BukkitConfiguration config = new BukkitConfiguration();
+    public BukkitConfiguration config = new BukkitConfiguration();
+    public Formator formator = new Formator();
 
     @Override
     public void onEnable() {
@@ -39,12 +37,15 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
         }
 
-        new Updator(new String[]{getDescription().getVersion(), getDescription().getName(), "62434"}).checkUpdates();
-        
+        new Updator(getDescription().getVersion(), getDescription().getName(), "62434").checkUpdates();
+
         // Register and load everything
-        registerCommands();
         registerListener();
         initLists();
+
+        PaperCommandManager manager = new PaperCommandManager(this);
+        manager.registerCommand(new PortalCommand(this));
+        manager.getCommandCompletions().registerCompletion("portals", c -> PortalManager.portalNames);
     }
 
     @Override
@@ -53,22 +54,11 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
     }
 
     /**
-     * Register commands
-     */
-    private void registerCommands() {
-        getCommand("setportal").setExecutor(new SetCommand(this));
-        getCommand("delportal").setExecutor(new DeleteCommand(this));
-        getCommand("portals").setExecutor(new ListCommand(this));
-    }
-
-    /**
      * Register listener
      */
     private void registerListener() {
-        if (MaSuiteCore.bungee) {
-            getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-            getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PortalsMessageListener(this));
-        }
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PortalsMessageListener(this));
 
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
         getServer().getPluginManager().registerEvents(new PhysicsListener(), this);
@@ -87,14 +77,8 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         // If list is empty when player joins, request portals
         if (PortalManager.portalNames.isEmpty()) {
-            try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-                 DataOutputStream out = new DataOutputStream(b)) {
-                out.writeUTF("MaSuitePortals");
-                out.writeUTF("RequestPortals");
-                getServer().getScheduler().runTaskLaterAsynchronously(this, () -> e.getPlayer().sendPluginMessage(this, "BungeeCord", b.toByteArray()), 100);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            BukkitPluginChannel bpc = new BukkitPluginChannel(this, e.getPlayer(), "MaSuitePortals", "RequestPortals");
+            getServer().getScheduler().runTaskLaterAsynchronously(this, bpc::send, 100);
         }
     }
 
