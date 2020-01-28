@@ -26,6 +26,7 @@ public class MaSuitePortals extends Plugin {
         // Register PortalMessageListener
         getProxy().getPluginManager().registerListener(this, new PortalMessageListener(this));
 
+        portalService.initializeWarps();
         // Send portal lists to servers
         sendPortalList();
 
@@ -43,7 +44,7 @@ public class MaSuitePortals extends Plugin {
                 if (error == null) {
                     portalService.getAllPortals().forEach(portal -> {
                         if (serverInfo.getName().equals(portal.getMinLoc().getServer())) {
-                            new BungeePluginChannel(this, serverInfo, "MaSuitePortals", "CreatePortal", portal.toString()).send();
+                            new BungeePluginChannel(this, serverInfo, "MaSuitePortals", "CreatePortal", portal.serialize()).send();
                         }
                     });
                 }
