@@ -1,6 +1,7 @@
 package fi.matiaspaavilainen.masuiteportals.core.models;
 
 
+import com.google.gson.Gson;
 import fi.matiaspaavilainen.masuitecore.core.objects.Location;
 import lombok.*;
 
@@ -59,9 +60,11 @@ public class Portal {
     })
     private Location maxLoc;
 
-    public String toString() {
-        String minLoc = getMinLoc().getWorld() + ":" + getMinLoc().getX() + ":" + getMinLoc().getY() + ":" + getMinLoc().getZ();
-        String maxLoc = getMaxLoc().getX() + ":" + getMaxLoc().getY() + ":" + getMaxLoc().getZ();
-        return getName() + ":" + getType() + ":" + getDestination() + ":" + getFillType() + ":" + minLoc + ":" + maxLoc;
+    public String serialize() {
+        return new Gson().toJson(this);
+    }
+
+    public Portal deserialize(String json) {
+        return new Gson().fromJson(json, Portal.class);
     }
 }
