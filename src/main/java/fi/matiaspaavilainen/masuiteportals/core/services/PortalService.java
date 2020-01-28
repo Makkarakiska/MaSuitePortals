@@ -72,10 +72,20 @@ public class PortalService {
 
     /**
      * Get all {@link Portal} from cache
+     *
      * @return returns a list of {@link Portal}
      */
     public List<Portal> getAllPortals() {
         return new ArrayList<>(portals.values());
+    }
+
+
+    /**
+     * Initialize warps for use
+     */
+    public void initializePortals() {
+        List<Portal> portalList = entityManager.createQuery("SELECT p FROM Portal p", Portal.class).getResultList();
+        portalList.forEach(portal -> portals.put(portal.getName(), portal));
     }
 
     /**
