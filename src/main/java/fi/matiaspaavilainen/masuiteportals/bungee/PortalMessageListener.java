@@ -65,10 +65,8 @@ public class PortalMessageListener implements Listener {
                             portal.setDestination(destination);
                         }
                         portal.setFillType(in.readUTF());
-                        String[] minLoc = in.readUTF().split(":");
-                        portal.setMinLoc(new Location(minLoc[0], Double.parseDouble(minLoc[1]), Double.parseDouble(minLoc[2]), Double.parseDouble(minLoc[3])));
-                        String[] maxLoc = in.readUTF().split(":");
-                        portal.setMaxLoc(new Location(maxLoc[0], Double.parseDouble(maxLoc[1]), Double.parseDouble(maxLoc[2]), Double.parseDouble(maxLoc[3])));
+                        portal.setMinLoc(new Location().deserialize(in.readUTF()));
+                        portal.setMaxLoc(new Location().deserialize(in.readUTF()));
 
                         portal.getMinLoc().setServer(p.getServer().getInfo().getName());
                         portal.getMaxLoc().setServer(p.getServer().getInfo().getName());
@@ -76,11 +74,11 @@ public class PortalMessageListener implements Listener {
                         // Save the portal
                         if (plugin.portalService.createPortal(portal)) {
                             formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.set").replace("%name%", portal.getName()).replace("%destination%", portal.getDestination()));
+                            new BungeePluginChannel(plugin, plugin.getProxy().getServerInfo(portal.getMinLoc().getServer()), "MaSuitePortals", "CreatePortal", portal.serialize()).send();
                         } else {
                             System.out.println("[MaSuite] [Portals] There was an error during saving process.");
                         }
-                        plugin.sendPortalList();
-                    }
+                                            }
 
                     if (childchannel.equals("DelPortal")) {
                         // Get the player
