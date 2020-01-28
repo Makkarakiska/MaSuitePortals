@@ -26,7 +26,7 @@ public class MaSuitePortals extends Plugin {
         // Register PortalMessageListener
         getProxy().getPluginManager().registerListener(this, new PortalMessageListener(this));
 
-        portalService.initializeWarps();
+        portalService.initializePortals();
         // Send portal lists to servers
         sendPortalList();
 
