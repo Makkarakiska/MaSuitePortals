@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MaSuitePortals extends JavaPlugin implements Listener {
 
@@ -23,6 +24,8 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
 
     public BukkitConfiguration config = new BukkitConfiguration();
     public Formator formator = new Formator();
+
+    public PortalManager portalManager = new PortalManager(this);
 
     @Override
     public void onEnable() {
@@ -41,16 +44,21 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
 
         // Register and load everything
         registerListener();
-        initLists();
 
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new PortalCommand(this));
-        manager.getCommandCompletions().registerCompletion("portals", c -> PortalManager.portalNames);
+        manager.getCommandCompletions().registerCompletion("portals", c -> {
+            List<String> portalNames = new ArrayList<>();
+            portalManager.portals.values().forEach(portal -> portalNames.add(portal.getName()));
+            return portalNames;
+        });
+
+        portalManager.loadPortals();
     }
 
     @Override
     public void onDisable() {
-        PortalManager.portals.forEach(((world, portals) -> portals.forEach(Portal::clearPortal)));
+        portalManager.portals.values().forEach(portal -> portalManager.clearPortal(portal));
     }
 
     /**
@@ -61,24 +69,16 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PortalsMessageListener(this));
 
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
-        getServer().getPluginManager().registerEvents(new PhysicsListener(), this);
+        getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
         getServer().getPluginManager().registerEvents(this, this);
 
-    }
-
-    /**
-     * Initialize lists for Portals
-     */
-    private void initLists() {
-        getServer().getWorlds().forEach(world -> PortalManager.portals.put(world, new ArrayList<Portal>()));
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         // If list is empty when player joins, request portals
-        if (PortalManager.portalNames.isEmpty()) {
-            BukkitPluginChannel bpc = new BukkitPluginChannel(this, e.getPlayer(), "MaSuitePortals", "RequestPortals");
-            getServer().getScheduler().runTaskLaterAsynchronously(this, bpc::send, 100);
+        if (portalManager.portals.isEmpty()) {
+            getServer().getScheduler().runTaskLaterAsynchronously(this, () -> new BukkitPluginChannel(this, e.getPlayer(), "MaSuitePortals", "RequestPortals").send(), 100);
         }
     }
 
