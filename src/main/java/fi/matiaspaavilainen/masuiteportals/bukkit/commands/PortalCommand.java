@@ -6,6 +6,7 @@ import com.sk89q.worldedit.regions.Region;
 import fi.matiaspaavilainen.masuitecore.acf.BaseCommand;
 import fi.matiaspaavilainen.masuitecore.acf.annotation.*;
 import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
+import fi.matiaspaavilainen.masuitecore.core.objects.Location;
 import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -39,8 +40,8 @@ public class PortalCommand extends BaseCommand {
                 plugin.formator.sendMessage(player, plugin.config.load("portals", "messages.yml").getString("invalid-material"));
                 return;
             }
-            String minLoc = player.getWorld().getName() + ":" + rg.getMinimumPoint().getBlockX() + ":" + rg.getMinimumPoint().getBlockY() + ":" + rg.getMinimumPoint().getBlockZ();
-            String maxLoc = player.getWorld().getName() + ":" + rg.getMaximumPoint().getX() + ":" + rg.getMaximumPoint().getY() + ":" + rg.getMaximumPoint().getZ();
+            String minLoc = new Location(player.getWorld().getName(), (double) rg.getMinimumPoint().getBlockX(), (double) rg.getMinimumPoint().getBlockY(), (double) rg.getMinimumPoint().getBlockZ()).serialize();
+            String maxLoc = new Location(player.getWorld().getName(), (double) rg.getMaximumPoint().getBlockX(), (double) rg.getMaximumPoint().getBlockY(), (double) rg.getMaximumPoint().getBlockZ()).serialize();
             new BukkitPluginChannel(plugin, player, "MaSuitePortals", "SetPortal", player.getName(), name, type, destination, fillType, minLoc, maxLoc).send();
         } catch (IncompleteRegionException e) {
             plugin.formator.sendMessage(player, plugin.config.load("portals", "messages.yml").getString("no-selected-area"));
