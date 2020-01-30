@@ -145,7 +145,7 @@ public class PortalManager {
         if (portal.getType().equals("server")) {
             new BukkitPluginChannel(plugin, player, "ConnectOther", player.getName(), portal.getDestination()).send();
         } else if (portal.getType().equals("warp")) {
-            new BukkitPluginChannel(plugin, player, "WarpCommand", player.getName(), portal.getDestination(), true).send();
+            new BukkitPluginChannel(plugin, player, "Warp", player.getName(), portal.getDestination(), true, true, true).send();
         }
     }
 }
