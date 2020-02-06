@@ -1,9 +1,9 @@
-package fi.matiaspaavilainen.masuiteportals.bungee;
+package dev.masa.masuiteportals.bungee;
 
-import fi.matiaspaavilainen.masuitecore.core.Updator;
-import fi.matiaspaavilainen.masuitecore.core.channels.BungeePluginChannel;
-import fi.matiaspaavilainen.masuitecore.core.configuration.BungeeConfiguration;
-import fi.matiaspaavilainen.masuiteportals.core.services.PortalService;
+import dev.masa.masuitecore.core.Updator;
+import dev.masa.masuitecore.core.channels.BungeePluginChannel;
+import dev.masa.masuitecore.core.configuration.BungeeConfiguration;
+import dev.masa.masuiteportals.core.services.PortalService;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 

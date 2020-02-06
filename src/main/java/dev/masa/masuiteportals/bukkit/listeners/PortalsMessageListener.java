@@ -1,7 +1,7 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit.listeners;
+package dev.masa.masuiteportals.bukkit.listeners;
 
-import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
-import fi.matiaspaavilainen.masuiteportals.core.models.Portal;
+import dev.masa.masuiteportals.bukkit.MaSuitePortals;
+import dev.masa.masuiteportals.core.models.Portal;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;

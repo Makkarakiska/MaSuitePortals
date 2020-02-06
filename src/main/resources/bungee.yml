@@ -1,5 +1,5 @@
 name: MaSuitePortals
-main: fi.matiaspaavilainen.masuiteportals.bungee.MaSuitePortals
+main: dev.masa.masuiteportals.bungee.MaSuitePortals
 version: ${project.version}
 author: Masagameplay
 depends: [MaSuiteCore]

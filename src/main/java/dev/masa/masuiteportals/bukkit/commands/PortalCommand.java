@@ -1,13 +1,13 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit.commands;
+package dev.masa.masuiteportals.bukkit.commands;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.regions.Region;
-import fi.matiaspaavilainen.masuitecore.acf.BaseCommand;
-import fi.matiaspaavilainen.masuitecore.acf.annotation.*;
-import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
-import fi.matiaspaavilainen.masuitecore.core.objects.Location;
-import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
+import dev.masa.masuitecore.acf.BaseCommand;
+import dev.masa.masuitecore.acf.annotation.*;
+import dev.masa.masuitecore.core.channels.BukkitPluginChannel;
+import dev.masa.masuitecore.core.objects.Location;
+import dev.masa.masuiteportals.bukkit.MaSuitePortals;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 

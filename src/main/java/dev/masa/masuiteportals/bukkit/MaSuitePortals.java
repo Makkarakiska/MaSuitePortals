@@ -1,15 +1,15 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit;
+package dev.masa.masuiteportals.bukkit;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import fi.matiaspaavilainen.masuitecore.acf.PaperCommandManager;
-import fi.matiaspaavilainen.masuitecore.bukkit.chat.Formator;
-import fi.matiaspaavilainen.masuitecore.core.Updator;
-import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
-import fi.matiaspaavilainen.masuitecore.core.configuration.BukkitConfiguration;
-import fi.matiaspaavilainen.masuiteportals.bukkit.commands.PortalCommand;
-import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.MovementListener;
-import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PhysicsListener;
-import fi.matiaspaavilainen.masuiteportals.bukkit.listeners.PortalsMessageListener;
+import dev.masa.masuitecore.acf.PaperCommandManager;
+import dev.masa.masuitecore.bukkit.chat.Formator;
+import dev.masa.masuitecore.core.Updator;
+import dev.masa.masuitecore.core.channels.BukkitPluginChannel;
+import dev.masa.masuitecore.core.configuration.BukkitConfiguration;
+import dev.masa.masuiteportals.bukkit.commands.PortalCommand;
+import dev.masa.masuiteportals.bukkit.listeners.MovementListener;
+import dev.masa.masuiteportals.bukkit.listeners.PhysicsListener;
+import dev.masa.masuiteportals.bukkit.listeners.PortalsMessageListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

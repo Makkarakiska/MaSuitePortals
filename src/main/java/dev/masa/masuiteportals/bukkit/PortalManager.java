@@ -1,12 +1,12 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit;
+package dev.masa.masuiteportals.bukkit;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fi.matiaspaavilainen.masuitecore.core.adapters.BukkitAdapter;
-import fi.matiaspaavilainen.masuitecore.core.channels.BukkitPluginChannel;
-import fi.matiaspaavilainen.masuiteportals.core.models.Portal;
+import dev.masa.masuitecore.core.adapters.BukkitAdapter;
+import dev.masa.masuitecore.core.channels.BukkitPluginChannel;
+import dev.masa.masuiteportals.core.models.Portal;
 import org.bukkit.*;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.Orientable;

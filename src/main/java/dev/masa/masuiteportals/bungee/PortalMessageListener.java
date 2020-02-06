@@ -1,10 +1,10 @@
-package fi.matiaspaavilainen.masuiteportals.bungee;
+package dev.masa.masuiteportals.bungee;
 
-import fi.matiaspaavilainen.masuitecore.bungee.chat.Formator;
-import fi.matiaspaavilainen.masuitecore.core.channels.BungeePluginChannel;
-import fi.matiaspaavilainen.masuitecore.core.configuration.BungeeConfiguration;
-import fi.matiaspaavilainen.masuitecore.core.objects.Location;
-import fi.matiaspaavilainen.masuiteportals.core.models.Portal;
+import dev.masa.masuitecore.bungee.chat.Formator;
+import dev.masa.masuitecore.core.channels.BungeePluginChannel;
+import dev.masa.masuitecore.core.configuration.BungeeConfiguration;
+import dev.masa.masuitecore.core.objects.Location;
+import dev.masa.masuiteportals.core.models.Portal;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

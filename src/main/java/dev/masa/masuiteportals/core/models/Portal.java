@@ -1,8 +1,8 @@
-package fi.matiaspaavilainen.masuiteportals.core.models;
+package dev.masa.masuiteportals.core.models;
 
 
 import com.google.gson.Gson;
-import fi.matiaspaavilainen.masuitecore.core.objects.Location;
+import dev.masa.masuitecore.core.objects.Location;
 import lombok.*;
 
 import javax.persistence.*;

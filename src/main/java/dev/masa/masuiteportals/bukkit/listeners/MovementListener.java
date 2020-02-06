@@ -1,8 +1,8 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit.listeners;
+package dev.masa.masuiteportals.bukkit.listeners;
 
-import fi.matiaspaavilainen.masuitecore.core.adapters.BukkitAdapter;
-import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
-import fi.matiaspaavilainen.masuiteportals.bukkit.PortalRegion;
+import dev.masa.masuitecore.core.adapters.BukkitAdapter;
+import dev.masa.masuiteportals.bukkit.MaSuitePortals;
+import dev.masa.masuiteportals.bukkit.PortalRegion;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

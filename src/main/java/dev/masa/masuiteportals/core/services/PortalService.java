@@ -1,8 +1,8 @@
-package fi.matiaspaavilainen.masuiteportals.core.services;
+package dev.masa.masuiteportals.core.services;
 
-import fi.matiaspaavilainen.masuitecore.core.utils.HibernateUtil;
-import fi.matiaspaavilainen.masuiteportals.bungee.MaSuitePortals;
-import fi.matiaspaavilainen.masuiteportals.core.models.Portal;
+import dev.masa.masuitecore.core.utils.HibernateUtil;
+import dev.masa.masuiteportals.bungee.MaSuitePortals;
+import dev.masa.masuiteportals.core.models.Portal;
 
 import javax.persistence.EntityManager;
 import java.util.*;

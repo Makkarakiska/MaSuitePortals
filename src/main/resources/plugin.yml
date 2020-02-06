@@ -1,6 +1,6 @@
 name: MaSuitePortals
 version: ${project.version}
-main: fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals
+main: dev.masa.masuiteportals.bukkit.MaSuitePortals
 depend: [WorldEdit, MaSuiteCore]
 authors: [Masa]
 api-version: 1.15
