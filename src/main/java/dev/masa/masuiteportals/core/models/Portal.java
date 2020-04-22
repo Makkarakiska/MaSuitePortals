@@ -2,6 +2,7 @@ package dev.masa.masuiteportals.core.models;
 
 
 import com.google.gson.Gson;
+import com.j256.ormlite.field.DatabaseField;
 import dev.masa.masuitecore.core.objects.Location;
 import lombok.*;
 
@@ -11,54 +12,65 @@ import javax.persistence.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
-@Entity
 @Table(name = "masuite_portals")
-@NamedQuery(
-        name = "findPortalByName",
-        query = "SELECT p FROM Portal p WHERE p.name = :name"
-)
 public class Portal {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @DatabaseField(generatedId = true)
     private int id;
 
     @NonNull
-    @Column(name = "name", unique = true)
+    @DatabaseField(unique = true, canBeNull = false)
     private String name;
 
-    @Column(name = "type")
+    @DatabaseField(canBeNull = false)
     private String type;
 
-    @Column(name = "destination")
+    @DatabaseField(canBeNull = false)
     private String destination;
 
-    @Column(name = "filltype")
+    @DatabaseField(canBeNull = false)
     private String fillType;
 
-    @Embedded
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "world", column = @Column(name = "world")),
-            @AttributeOverride(name = "x", column = @Column(name = "minX")),
-            @AttributeOverride(name = "y", column = @Column(name = "minY")),
-            @AttributeOverride(name = "z", column = @Column(name = "minZ")),
-            @AttributeOverride(name = "yaw", column = @Column(name = "yaw", insertable = false, updatable = false)),
-            @AttributeOverride(name = "pitch", column = @Column(name = "pitch", insertable = false, updatable = false)),
-            @AttributeOverride(name = "server", column = @Column(name = "server"))
-    })
-    private Location minLoc;
+    @DatabaseField
+    private String server;
+    @DatabaseField
+    private String world;
+    @DatabaseField
+    private Double minX;
+    @DatabaseField
+    private Double minY;
+    @DatabaseField
+    private Double minZ;
+    @DatabaseField
+    private Double maxX;
+    @DatabaseField
+    private Double maxY;
+    @DatabaseField
+    private Double maxZ;
 
-    @Embedded
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "world", column = @Column(name = "world", insertable = false, updatable = false)),
-            @AttributeOverride(name = "x", column = @Column(name = "maxX")),
-            @AttributeOverride(name = "y", column = @Column(name = "maxY")),
-            @AttributeOverride(name = "z", column = @Column(name = "maxZ")),
-            @AttributeOverride(name = "yaw", column = @Column(name = "yaw", insertable = false, updatable = false)),
-            @AttributeOverride(name = "pitch", column = @Column(name = "pitch", insertable = false, updatable = false)),
-            @AttributeOverride(name = "server", column = @Column(name = "server", insertable = false, updatable = false))
-    })
-    private Location maxLoc;
+    public Location getMinLocation() {
+        return new Location(server, world, minX, minY, minZ);
+    }
+
+    public void setMinLocation(Location loc) {
+        this.server = loc.getServer();
+        this.world = loc.getWorld();
+        this.minX = loc.getX();
+        this.minY = loc.getY();
+        this.minZ = loc.getZ();
+    }
+
+    public Location getMaxLocation() {
+        return new Location(server, world, maxX, maxY, maxZ);
+    }
+
+    public void setMaxLocation(Location loc) {
+        this.server = loc.getServer();
+        this.world = loc.getWorld();
+        this.maxX = loc.getX();
+        this.maxY = loc.getY();
+        this.maxZ = loc.getZ();
+    }
 
     public String serialize() {
         return new Gson().toJson(this);

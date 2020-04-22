@@ -44,8 +44,8 @@ public class MovementListener implements Listener {
 
         plugin.portalManager.getPortalsFromWorld(player.getWorld()).forEach(portal -> {
             // Create region
-            Location minLoc = BukkitAdapter.adapt(portal.getMinLoc());
-            Location maxLoc = BukkitAdapter.adapt(portal.getMaxLoc());
+            Location minLoc = BukkitAdapter.adapt(portal.getMinLocation());
+            Location maxLoc = BukkitAdapter.adapt(portal.getMaxLocation());
             PortalRegion pr = new PortalRegion(minLoc, maxLoc);
 
             // Check if is region with margin 1

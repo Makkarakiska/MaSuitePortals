@@ -1,9 +1,11 @@
 package dev.masa.masuiteportals.bungee;
 
 import dev.masa.masuitecore.core.Updator;
+import dev.masa.masuitecore.core.api.MaSuiteCoreAPI;
 import dev.masa.masuitecore.core.channels.BungeePluginChannel;
 import dev.masa.masuitecore.core.configuration.BungeeConfiguration;
 import dev.masa.masuiteportals.core.services.PortalService;
+import lombok.Getter;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -12,8 +14,10 @@ import java.util.Map;
 public class MaSuitePortals extends Plugin {
 
     private BungeeConfiguration config = new BungeeConfiguration();
-    public PortalService portalService;
-
+    @Getter
+    private PortalService portalService;
+    @Getter
+    private MaSuiteCoreAPI api = new MaSuiteCoreAPI();
     @Override
     public void onEnable() {
         super.onEnable();
@@ -43,7 +47,7 @@ public class MaSuitePortals extends Plugin {
             serverInfo.ping((result, error) -> {
                 if (error == null) {
                     portalService.getAllPortals().forEach(portal -> {
-                        if (serverInfo.getName().equals(portal.getMinLoc().getServer())) {
+                        if (serverInfo.getName().equals(portal.getMinLocation().getServer())) {
                             new BungeePluginChannel(this, serverInfo, "MaSuitePortals", "CreatePortal", portal.serialize()).send();
                         }
                     });

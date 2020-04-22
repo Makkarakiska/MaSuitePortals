@@ -36,12 +36,12 @@ public class PortalsMessageListener implements PluginMessageListener {
                     Portal portal = new Portal().deserialize(in.readUTF());
                     // Split portal information
                     // If portal's world is not null
-                    if (Bukkit.getWorld(portal.getMinLoc().getWorld()) != null) {
+                    if (Bukkit.getWorld(portal.getMinLocation().getWorld()) != null) {
                         plugin.portalManager.addPortal(portal);
                         plugin.portalManager.fillPortal(portal);
                     } else {
                         // Return warning message
-                        System.out.println("[MaSuite] [Portals] [Portal=" + portal.getName() + "] [World=" + portal.getMinLoc().getWorld() + "] World not found");
+                        System.out.println("[MaSuite] [Portals] [Portal=" + portal.getName() + "] [World=" + portal.getMinLocation().getWorld() + "] World not found");
                     }
                 }
 

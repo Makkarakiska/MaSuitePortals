@@ -65,16 +65,16 @@ public class PortalMessageListener implements Listener {
                             portal.setDestination(destination);
                         }
                         portal.setFillType(in.readUTF());
-                        portal.setMinLoc(new Location().deserialize(in.readUTF()));
-                        portal.setMaxLoc(new Location().deserialize(in.readUTF()));
+                        portal.setMinLocation(new Location().deserialize(in.readUTF()));
+                        portal.setMaxLocation(new Location().deserialize(in.readUTF()));
 
-                        portal.getMinLoc().setServer(p.getServer().getInfo().getName());
-                        portal.getMaxLoc().setServer(p.getServer().getInfo().getName());
+                        portal.getMinLocation().setServer(p.getServer().getInfo().getName());
+                        portal.getMaxLocation().setServer(p.getServer().getInfo().getName());
 
                         // Save the portal
-                        if (plugin.portalService.createPortal(portal)) {
+                        if (plugin.getPortalService().createPortal(portal)) {
                             formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.set").replace("%name%", portal.getName()).replace("%destination%", portal.getDestination()));
-                            new BungeePluginChannel(plugin, plugin.getProxy().getServerInfo(portal.getMinLoc().getServer()), "MaSuitePortals", "CreatePortal", portal.serialize()).send();
+                            new BungeePluginChannel(plugin, plugin.getProxy().getServerInfo(portal.getMinLocation().getServer()), "MaSuitePortals", "CreatePortal", portal.serialize()).send();
                         } else {
                             System.out.println("[MaSuite] [Portals] There was an error during saving process.");
                         }
@@ -86,7 +86,7 @@ public class PortalMessageListener implements Listener {
                         if (p == null) {
                             return;
                         }
-                        Portal portal = plugin.portalService.getPortal(in.readUTF());
+                        Portal portal = plugin.getPortalService().getPortal(in.readUTF());
 
                         // If portal is null, return not found message
                         if (portal == null) {
@@ -95,9 +95,9 @@ public class PortalMessageListener implements Listener {
                         }
 
                         // If delete successful, info
-                        if (plugin.portalService.removePortal(portal)) {
+                        if (plugin.getPortalService().removePortal(portal)) {
                             formator.sendMessage(p, config.load("portals", "messages.yml").getString("portal.deleted").replace("%name%", portal.getName()));
-                            new BungeePluginChannel(plugin, plugin.getProxy().getServerInfo(portal.getMinLoc().getServer()), "MaSuitePortals", "DeletePortal", portal.getName()).send();
+                            new BungeePluginChannel(plugin, plugin.getProxy().getServerInfo(portal.getMinLocation().getServer()), "MaSuitePortals", "DeletePortal", portal.getName()).send();
                         } else {
                             System.out.println("[MaSuite] [Portals] There was an error during deleting process.");
                         }
@@ -113,8 +113,8 @@ public class PortalMessageListener implements Listener {
                         StringJoiner list = new StringJoiner(config.load("portals", "messages.yml").getString("portal.list.splitter"));
 
                         // Loop every portal and add items to list
-                        plugin.portalService.getAllPortals().forEach(portal -> {
-                            if (portal.getMinLoc().getServer().equals(player.getServer().getInfo().getName())) {
+                        plugin.getPortalService().getAllPortals().forEach(portal -> {
+                            if (portal.getMinLocation().getServer().equals(player.getServer().getInfo().getName())) {
                                 list.add(name.replace("%portal%", portal.getName()));
                             }
                         });

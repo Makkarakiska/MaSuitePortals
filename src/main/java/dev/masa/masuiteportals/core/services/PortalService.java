@@ -1,21 +1,27 @@
 package dev.masa.masuiteportals.core.services;
 
-import dev.masa.masuitecore.core.utils.HibernateUtil;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.table.TableUtils;
 import dev.masa.masuiteportals.bungee.MaSuitePortals;
 import dev.masa.masuiteportals.core.models.Portal;
+import lombok.Getter;
+import lombok.SneakyThrows;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 public class PortalService {
 
-    private EntityManager entityManager = HibernateUtil.addClasses(Portal.class).getEntityManager();
-    public HashMap<String, Portal> portals = new HashMap<>();
-
+    @Getter
+    private HashMap<String, Portal> portals = new HashMap<>();
+    private Dao<Portal, Integer> portalDao;
     private MaSuitePortals plugin;
 
+    @SneakyThrows
     public PortalService(MaSuitePortals plugin) {
         this.plugin = plugin;
+        this.portalDao = DaoManager.createDao(plugin.getApi().getDatabaseService().getConnection(), Portal.class);
+        TableUtils.createTableIfNotExists(plugin.getApi().getDatabaseService().getConnection(), Portal.class);
     }
 
 
@@ -25,10 +31,9 @@ public class PortalService {
      * @param portal portal to create
      * @return created portal
      */
+    @SneakyThrows
     public boolean createPortal(Portal portal) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(portal);
-        entityManager.getTransaction().commit();
+        portalDao.create(portal);
         portals.put(portal.getName(), portal);
         return true;
     }
@@ -39,10 +44,9 @@ public class PortalService {
      * @param portal portal to updated
      * @return updated portal
      */
+    @SneakyThrows
     public boolean updatePortal(Portal portal) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(portal);
-        entityManager.getTransaction().commit();
+        portalDao.update(portal);
         portals.put(portal.getName(), portal);
         return true;
     }
@@ -52,10 +56,9 @@ public class PortalService {
      *
      * @param portal portal to remove
      */
+    @SneakyThrows
     public boolean removePortal(Portal portal) {
-        entityManager.getTransaction().begin();
-        entityManager.remove(portal);
-        entityManager.getTransaction().commit();
+        portalDao.delete(portal);
         portals.remove(portal.getName());
         return true;
     }
@@ -83,9 +86,9 @@ public class PortalService {
     /**
      * Initialize warps for use
      */
+    @SneakyThrows
     public void initializePortals() {
-        List<Portal> portalList = entityManager.createQuery("SELECT p FROM Portal p", Portal.class).getResultList();
-        portalList.forEach(portal -> portals.put(portal.getName(), portal));
+        portalDao.queryForAll().forEach(portal -> portals.put(portal.getName(), portal));
     }
 
     /**
@@ -94,15 +97,14 @@ public class PortalService {
      * @param name name of the portal
      * @return returns {@link Portal} or null
      */
+    @SneakyThrows
     private Portal loadPortal(String name) {
         if (portals.containsKey(name)) {
             return portals.get(name);
         }
 
         // Search home from database
-        Portal portal = entityManager.createNamedQuery("findPortalByName", Portal.class)
-                .setParameter("name", name)
-                .getResultList().stream().findFirst().orElse(null);
+        Portal portal = portalDao.queryForEq("name", name).stream().findFirst().orElse(null);
 
         // Add home into cache if not null
         if (portal != null) {

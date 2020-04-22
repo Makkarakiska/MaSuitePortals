@@ -35,7 +35,7 @@ public class PortalManager {
      * @return a list of portals
      */
     public List<World> getWorlds() {
-        return portals.values().stream().map(portal -> Bukkit.getWorld(portal.getMinLoc().getWorld())).collect(Collectors.toList());
+        return portals.values().stream().map(portal -> Bukkit.getWorld(portal.getMinLocation().getWorld())).collect(Collectors.toList());
     }
 
     /**
@@ -45,7 +45,7 @@ public class PortalManager {
      * @return returns a list of portals
      */
     public List<Portal> getPortalsFromWorld(World world) {
-        return portals.values().stream().filter(portal -> Bukkit.getWorld(portal.getMinLoc().getWorld()) == world).collect(Collectors.toList());
+        return portals.values().stream().filter(portal -> Bukkit.getWorld(portal.getMinLocation().getWorld()) == world).collect(Collectors.toList());
     }
 
     /**
@@ -83,8 +83,8 @@ public class PortalManager {
      * @param portal portal to fill
      */
     public void fillPortal(Portal portal) {
-        Location minLoc = BukkitAdapter.adapt(portal.getMinLoc());
-        Location maxLoc = BukkitAdapter.adapt(portal.getMaxLoc());
+        Location minLoc = BukkitAdapter.adapt(portal.getMinLocation());
+        Location maxLoc = BukkitAdapter.adapt(portal.getMaxLocation());
         PortalRegion pr = new PortalRegion(minLoc, maxLoc);
 
         pr.blockList().forEach(block -> {
@@ -124,8 +124,8 @@ public class PortalManager {
      * @param portal portal to clear
      */
     public void clearPortal(Portal portal) {
-        Location minLoc = BukkitAdapter.adapt(portal.getMinLoc());
-        Location maxLoc = BukkitAdapter.adapt(portal.getMaxLoc());
+        Location minLoc = BukkitAdapter.adapt(portal.getMinLocation());
+        Location maxLoc = BukkitAdapter.adapt(portal.getMaxLocation());
         PortalRegion pr = new PortalRegion(minLoc, maxLoc);
 
         pr.blockList().forEach(block -> {

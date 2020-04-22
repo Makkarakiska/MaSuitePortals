@@ -43,8 +43,8 @@ public class PhysicsListener implements Listener {
         }
 
         plugin.portalManager.getPortalsFromWorld(block.getWorld()).forEach(portal -> {
-            Location minLoc = BukkitAdapter.adapt(portal.getMinLoc());
-            Location maxLoc = BukkitAdapter.adapt(portal.getMaxLoc());
+            Location minLoc = BukkitAdapter.adapt(portal.getMinLocation());
+            Location maxLoc = BukkitAdapter.adapt(portal.getMaxLocation());
             PortalRegion pr = new PortalRegion(minLoc, maxLoc);
             if (pr.isIn(block.getLocation())) {
                 event.setCancelled(true);
