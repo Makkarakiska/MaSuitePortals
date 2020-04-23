@@ -44,9 +44,17 @@ public class PortalMessageListener implements Listener {
                             return;
                         }
 
-                        // Setup portal
+                        String portalName = in.readUTF();
                         Portal portal = new Portal();
-                        portal.setName(in.readUTF());
+
+                        // Check if portal already exists
+                        if (this.plugin.getPortalService().getPortal(portalName) != null) {
+                            portal = this.plugin.getPortalService().getPortal(portalName);
+                        }
+
+                        // Setup portal
+
+                        portal.setName(portalName);
 
                         portal.setType(in.readUTF());
                         String destination = in.readUTF();
@@ -65,11 +73,15 @@ public class PortalMessageListener implements Listener {
                             portal.setDestination(destination);
                         }
                         portal.setFillType(in.readUTF());
-                        portal.setMinLocation(new Location().deserialize(in.readUTF()));
-                        portal.setMaxLocation(new Location().deserialize(in.readUTF()));
 
-                        portal.getMinLocation().setServer(p.getServer().getInfo().getName());
-                        portal.getMaxLocation().setServer(p.getServer().getInfo().getName());
+                        Location minLocation = new Location().deserialize(in.readUTF());
+                        minLocation.setServer(p.getServer().getInfo().getName());
+
+                        Location maxLocation = new Location().deserialize(in.readUTF());
+                        maxLocation.setServer(p.getServer().getInfo().getName());
+
+                        portal.setMinLocation(minLocation);
+                        portal.setMaxLocation(maxLocation);
 
                         // Save the portal
                         if (plugin.getPortalService().createPortal(portal)) {
@@ -78,7 +90,7 @@ public class PortalMessageListener implements Listener {
                         } else {
                             System.out.println("[MaSuite] [Portals] There was an error during saving process.");
                         }
-                                            }
+                    }
 
                     if (childchannel.equals("DelPortal")) {
                         // Get the player

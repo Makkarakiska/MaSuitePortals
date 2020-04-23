@@ -33,7 +33,7 @@ public class PortalService {
      */
     @SneakyThrows
     public boolean createPortal(Portal portal) {
-        portalDao.create(portal);
+        portalDao.createOrUpdate(portal);
         portals.put(portal.getName(), portal);
         return true;
     }
