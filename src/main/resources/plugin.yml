@@ -3,5 +3,5 @@ version: ${project.version}
 main: dev.masa.masuiteportals.bukkit.MaSuitePortals
 depend: [WorldEdit, MaSuiteCore]
 authors: [Masa]
-api-version: 1.15
+api-version: 1.13
 loadbefore: [Essentials]
