@@ -57,7 +57,7 @@ public class PortalCommand extends BaseCommand {
     }
 
     @CommandAlias("portals|portalslist|listportals")
-    @CommandPermission("masuiteportals.portal.delete")
+    @CommandPermission("masuiteportals.portal.list")
     @Description("List all portals")
     public void listPortalsCommand(Player player) {
         new BukkitPluginChannel(plugin, player, "MaSuitePortals", "ListCommand", player.getName()).send();
