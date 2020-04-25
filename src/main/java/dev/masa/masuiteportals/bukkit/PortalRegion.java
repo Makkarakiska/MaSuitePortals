@@ -1,4 +1,4 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit;
+package dev.masa.masuiteportals.bukkit;
 
 import org.bukkit.Location;
 import org.bukkit.World;

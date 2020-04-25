@@ -1,8 +1,8 @@
-package fi.matiaspaavilainen.masuiteportals.bukkit.listeners;
+package dev.masa.masuiteportals.bukkit.listeners;
 
-import fi.matiaspaavilainen.masuiteportals.bukkit.MaSuitePortals;
-import fi.matiaspaavilainen.masuiteportals.bukkit.PortalManager;
-import fi.matiaspaavilainen.masuiteportals.bukkit.PortalRegion;
+import dev.masa.masuitecore.core.adapters.BukkitAdapter;
+import dev.masa.masuiteportals.bukkit.MaSuitePortals;
+import dev.masa.masuiteportals.bukkit.PortalRegion;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class MovementListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
 
         Block t = e.getTo().getBlock();
         Block f = e.getFrom().getBlock();
@@ -37,20 +37,19 @@ public class MovementListener implements Listener {
         }
 
         // Check if the world is the same
-        if (!PortalManager.portals.containsKey(p.getWorld())) {
+        if (!plugin.portalManager.getWorlds().contains(player.getWorld())) {
             return;
         }
 
-        PortalManager.portals.get(p.getWorld()).forEach(portal -> {
-            // Get points
-            Location corner1 = new Location(p.getWorld(), portal.getMinLoc().getX(), portal.getMinLoc().getY(), portal.getMinLoc().getZ());
-            Location corner2 = new Location(p.getWorld(), portal.getMaxLoc().getX(), portal.getMaxLoc().getY(), portal.getMaxLoc().getZ());
 
+        plugin.portalManager.getPortalsFromWorld(player.getWorld()).forEach(portal -> {
             // Create region
-            PortalRegion pr = new PortalRegion(corner1, corner2);
+            Location minLoc = BukkitAdapter.adapt(portal.getMinLocation());
+            Location maxLoc = BukkitAdapter.adapt(portal.getMaxLocation());
+            PortalRegion pr = new PortalRegion(minLoc, maxLoc);
 
             // Check if is region with margin 1
-            if (pr.isInWithMarge(p.getLocation(), 1)) {
+            if (pr.isInWithMarge(player.getLocation(), 1)) {
 
                 // Rotate player
                 Vector unitVector = e.getFrom().toVector().subtract(e.getTo().toVector()).normalize();
@@ -58,9 +57,9 @@ public class MovementListener implements Listener {
                 l.setYaw(l.getYaw() + 180);
                 unitVector.multiply(2);
                 l.add(unitVector);
-                p.teleport(l);
+                player.teleport(l);
                 // Send player
-                portal.send(p, plugin);
+                plugin.portalManager.sendPlayer(player, portal);
             }
         });
 
