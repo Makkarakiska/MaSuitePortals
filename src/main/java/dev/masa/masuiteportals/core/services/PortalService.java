@@ -2,6 +2,7 @@ package dev.masa.masuiteportals.core.services;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.table.TableUtils;
 import dev.masa.masuiteportals.bungee.MaSuitePortals;
 import dev.masa.masuiteportals.core.models.Portal;
@@ -103,8 +104,10 @@ public class PortalService {
             return portals.get(name);
         }
 
+        SelectArg preparedName = new SelectArg(name);
+
         // Search home from database
-        Portal portal = portalDao.queryForEq("name", name).stream().findFirst().orElse(null);
+        Portal portal = portalDao.queryForEq("name", preparedName).stream().findFirst().orElse(null);
 
         // Add home into cache if not null
         if (portal != null) {
