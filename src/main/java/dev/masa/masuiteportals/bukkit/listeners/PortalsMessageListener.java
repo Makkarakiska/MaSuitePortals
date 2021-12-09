@@ -9,6 +9,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class PortalsMessageListener implements PluginMessageListener {
 
@@ -37,6 +38,7 @@ public class PortalsMessageListener implements PluginMessageListener {
                     // Split portal information
                     // If portal's world is not null
                     if (Bukkit.getWorld(portal.getMinLocation().getWorld()) != null) {
+                        this.plugin.getLogger().log(Level.INFO, "Adding portal " + portal.serialize());
                         plugin.portalManager.addPortal(portal);
                         plugin.portalManager.fillPortal(portal);
                     } else {
