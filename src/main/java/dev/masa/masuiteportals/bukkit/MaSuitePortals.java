@@ -31,6 +31,7 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
     public void onEnable() {
         //Create configs
         config.create(this, "portals", "syntax.yml");
+        config.create(this, "portals", "config.yml");
         config.create(this, "portals", "messages.yml");
 
         // Load WorldEdit
@@ -69,7 +70,11 @@ public class MaSuitePortals extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PortalsMessageListener(this));
 
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
-        getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
+
+        if(this.config.load("portals", "config.yml").getBoolean("cancel-block-physics")) {
+            getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
+        }
+
         getServer().getPluginManager().registerEvents(this, this);
 
     }
